@@ -1,0 +1,37 @@
+DB Scheme UniPlan
+
+
+Subject
+- subjId: unique Id     Primary key
+- subjName: text
+- subjCode: text
+- subjCredits: number
+- subjDegree: text
+- subjYear: text
+- subjStatus: text
+- subjCalifOrd
+- subjCalifExtra
+- subjContEvaluation
+- subjExamOrd
+- subjExamExtra
+
+Activities
+- actId
+- actName
+- actDate
+- actValue
+- actCalification
+- subjId
+
+Week
+- weekId
+- weekStartDate
+- weekEndDate
+- weekOrder
+- weekLesson1
+- WeekLesson2
+- weekWatch
+- weekSummary
+- weekExercises
+- weekStudy
+

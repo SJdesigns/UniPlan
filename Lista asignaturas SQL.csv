@@ -1,0 +1,42 @@
+﻿subjName;subjCode;subjCredits;subjDegree;subjYear;subjQuarter;subjStatus;subjGradeOrd;subjGradeExtra;subjContEvaluation;subjExamOrd;subjExamExtra;userId;subjTestsTaken;subjTestsTotal
+Introducción a la contabilidad;CON;6;Administración y dirección de empresas;1;1;aprobada;9.3;-;4;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Matemáticas empresariales;MAT;6;Administración y dirección de empresas;1;1;aprobada;9.4;-;3,84;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Fundamentos de marketing;MKT;6;Administración y dirección de empresas;1;1;aprobada;7.6;-;4;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Introducción a la economía;ECO;6;Administración y dirección de empresas;1;1;aprobada;9.0;-;4;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Administración de empresas;EMP;6;Administración y dirección de empresas;1;1;aprobada;8.9;-;4;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Comunicación personal y organizacional;CPO;6;Administración y dirección de empresas;1;2;aprobada;7.0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Derecho mercantil y de sociedades;DER;6;Administración y dirección de empresas;1;2;aprobada;6.3;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Microeconomía;MIC;6;Administración y dirección de empresas;1;2;aprobada;7.6;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Estadística I;ES1;6;Administración y dirección de empresas;1;2;aprobada;8.2;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Introducción a las TIC;TIC;6;Administración y dirección de empresas;1;2;aprobada;5.0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+;;;;;;;;;;;;;;
+Economía mundial;ECM;6;Administración y dirección de empresas;2;1;aprobada;6.9;-;2,84;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Dirección financiera I;DF1;6;Administración y dirección de empresas;2;1;aprobada;7.4;7.4;2,04;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Contabilidad financiera;CFN;6;Administración y dirección de empresas;2;1;aprobada;8.3;8.3;3,15;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Macroeconomía;MAC;6;Administración y dirección de empresas;2;1;aprobada;7.2;-;3,04;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Dirección comercial I;DC1;6;Administración y dirección de empresas;2;1;aprobada;6.5;-;2,56;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Estadística II;ES2;6;Administración y dirección de empresas;2;2;aprobada;6.8;6.8;2;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Dirección de empresas;DEM;6;Administración y dirección de empresas;2;2;aprobada;5.4;-;2,16;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Dirección financiera II;DF2;6;Administración y dirección de empresas;2;2;aprobada;7.5;-;3,56;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Lengua inglesa;ENG;6;Administración y dirección de empresas;2;2;aprobada;8.5;-;2,92;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Análisis contable;ACT;6;Administración y dirección de empresas;2;2;aprobada;6.9;-;2,28;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+;;;;;;;;;;;;;;
+Dirección comercial II;DC2;6;Administración y dirección de empresas;3;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Régimen fiscal de la empresa;RFE;6;Administración y dirección de empresas;3;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Dirección de recursos humanos;DRH;6;Administración y dirección de empresas;3;1;aprobada;6.4;-;2,23;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Contabilidad de gestión;CTG;6;Administración y dirección de empresas;3;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Estrategias de marketing digital;EMD;6;Administración y dirección de empresas;3;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Econometría;ECT;6;Administración y dirección de empresas;3;2;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Dirección estratégica de recursos humanos;ERH;6;Administración y dirección de empresas;3;2;aprobada;6.6;-;2,4;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Seminario de cultura del vino;SCV;12;Administración y dirección de empresas;3;2;aprobada;8.8;-;8,78;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Dirección de operaciones;DOP;6;Administración y dirección de empresas;3;2;aprobada;8.4;-;3,4;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+;;;;;;;;;;;;;;
+Direccion estrategica de la empresa I;DE1;6;Administración y dirección de empresas;4;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Tecnologia e informacion en la empresa digital;TED;6;Administración y dirección de empresas;4;1;aprobada;5.0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Analisis de mercados y valores financieros;AMV;6;Administración y dirección de empresas;4;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+El ambito digital y la internacionalizacion de la empresa;INT;6;Administración y dirección de empresas;4;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Creacion y gestion de empresas en el entorno digital;CED;6;Administración y dirección de empresas;4;1;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Direccion estrategica de la empresa II;DE2;6;Administración y dirección de empresas;4;2;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Direccion de la innovacion en un entorno digital;IND;6;Administración y dirección de empresas;4;2;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Habilidades directivas;HAB;6;Administración y dirección de empresas;4;2;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10
+Trabajo de fin de grado;TFG;12;Administración y dirección de empresas;4;2;pendiente;0;-;0;;;a70e75ff-2aa7-4958-bcc9-8de8977d74de;0;10

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniPlan</title>
+    <meta name="theme-color" content="#ffd000">
+    <link rel="shortcut icon" type="image/x-icon" href="img/logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="text/javascript">
+		const supabaseUrl = 'https://tydeunwzwbepkhgzofmt.supabase.co/';
+		const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5ZGV1bnd6d2JlcGtoZ3pvZm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzA5OTEsImV4cCI6MjA2MDQwNjk5MX0.xDFOpW2qVTfWeDEUP9PUxfx4HSRLeqkKynBeUHRY1yo';
+        var supabasePublicClient;
+        console.log(typeof supabase);
+        if (typeof supabase !== 'undefined') {
+            console.log('definido');
+    		console.log(typeof supabase);
+            supabasePublicClient = supabase.createClient(supabaseUrl,supabaseKey);
+        } else {
+            console.log('no definido');
+        }
+	</script>
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+    <div id="loading">
+		<div id="loadingCenter">
+			<div class="showbox">
+			  <div class="loader">
+			    <svg class="circular" viewBox="25 25 50 50">
+			      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+			    </svg>
+			  </div>
+			</div>
+		</div>
+	</div>
+    <div id="errorReporting"></div>
+    <div id="container">
+        <header>
+            <svg id="headerLogo" xmlns="http://www.w3.org/2000/svg" width="96.17" height="96.21" viewBox="0 0 96.17 96.21"><title>newLogoNegro</title><g id="Capa_3" data-name="Capa 3"><path d="M50,98.08,1.92,50,50,1.92,98.08,50ZM18.89,50,50,81.11,81.11,50,50,18.89Z" transform="translate(-1.92 -1.92)" style="fill:#444"/></g><g id="Capa_4" data-name="Capa 4"><path d="M84.68,36.7l-12,5L81.05,50,49.94,81.16,28.7,59.92l-12,5L49.94,98.13,98,50Z" transform="translate(-1.92 -1.92)" style="fill:#111"/><line x1="26.78" y1="58" x2="14.79" y2="62.98" style="fill:none"/><line x1="82.76" y1="34.78" x2="70.76" y2="39.75" style="fill:none"/></g></svg>
+            <nav>
+                <div class="navItem" id="navItemHome">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                </div>
+                <div class="navItem" id="navItemCalendar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                </div>
+                <div class="navItem" id="navItemTimer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-icon lucide-clock"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+                </div>
+                <div id="navSubjectList"></div>
+            </nav>
+        </header>
+        <main>
+            <section>
+                <div class="tab" id="tabHome">
+                    <div class="tabContent">
+                        <div id="tabHomeDegree">
+                            <div id="homeDegreeTop">
+                                <div id="homeDegreeLeft">
+                                    <div id="homeDegreeIcon" style="float: left; height: 64px">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap-icon lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+                                    </div>
+                                    <div id="homeDegreeLeftTxt">
+                                        <h1 id="homeDegreeName"></h1>
+                                        <p id="homeDegreeCollege"></p>
+                                    </div>
+                                </div>
+                                <div id="homeDegreeRight">
+                                    <div id="homeDegreeCredits">
+                                        <div id="homeDegreeCreditsGained">
+                                            <p>ETCS Obtenidos</p>
+                                            <p></p>
+                                        </div>
+                                        <div id="homeDegreeCreditsTotal">
+                                            <p>ETCS Totales</p>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="homeDegreeProgresss">
+                                <div id="homeDegreeProgressBar"></div>
+                            </div>
+                        </div>
+                        <div id="tabHomeSearchBar">
+                            <div id="homeSearchBarLeft">
+                                <p>Listado de asignaturas</p>
+                            </div>
+                            <div id="homeSearchBarRight">
+                                <select id="homeSearchOnlyOngoing">
+                                    <option value="all">Mostrar todas</option>
+                                    <option value="ongoing">Solo en curso</option>
+                                </select>
+                                <div id="homeSearchOnlyOngoingRight"></div>
+                            </div>
+                        </div>
+                        <div id="tabHomeSubjectList"></div>
+                    </div>
+                    <div id="homeSubjectList"></div>
+                </div>
+                <div class="tab" id="tabCalendar">
+                    <div class="tabContent">
+                        <div id="calendarContent">
+                            <div id="calendarEventList">
+                                <h3>Listado de actividades pendientes</h3>
+                                <div id="calendarList">
+                                </div>
+                            </div>
+                            <div id="calendarMonthTable">
+                                <div class="calTableItem">
+                                    <div class="calTableTitle">
+                                        <p>Octubre 2025</p>
+                                    </div>
+                                    <div class="calTableRow">
+                                        <div class="calTableCell">L</div>
+                                        <div class="calTableCell">M</div>
+                                        <div class="calTableCell">X</div>
+                                        <div class="calTableCell">J</div>
+                                        <div class="calTableCell">V</div>
+                                        <div class="calTableCell">S</div>
+                                        <div class="calTableCell">D</div>
+                                    </div>
+                                    <div class="calTableRow">
+                                        <div class="calTableCell"></div>
+                                        <div class="calTableCell"></div>
+                                        <div class="calTableCell">1</div>
+                                        <div class="calTableCell">2</div>
+                                        <div class="calTableCell">3</div>
+                                        <div class="calTableCell">4</div>
+                                        <div class="calTableCell">5</div>
+                                    </div>
+                                    <div class="calTableRow">
+                                        <div class="calTableCell">6</div>
+                                        <div class="calTableCell">7</div>
+                                        <div class="calTableCell">8</div>
+                                        <div class="calTableCell">9</div>
+                                        <div class="calTableCell">10</div>
+                                        <div class="calTableCell">11</div>
+                                        <div class="calTableCell">12</div>
+                                    </div>
+                                    <div class="calTableRow">
+                                        <div class="calTableCell">13</div>
+                                        <div class="calTableCell">14</div>
+                                        <div class="calTableCell">15</div>
+                                        <div class="calTableCell">16</div>
+                                        <div class="calTableCell">17</div>
+                                        <div class="calTableCell">18</div>
+                                        <div class="calTableCell">19</div>
+                                    </div>
+                                    <div class="calTableRow">
+                                        <div class="calTableCell">20</div>
+                                        <div class="calTableCell">21</div>
+                                        <div class="calTableCell">22</div>
+                                        <div class="calTableCell">23</div>
+                                        <div class="calTableCell">24</div>
+                                        <div class="calTableCell">25</div>
+                                        <div class="calTableCell">26</div>
+                                    </div>
+                                    <div class="calTableRow">
+                                        <div class="calTableCell">27</div>
+                                        <div class="calTableCell">28</div>
+                                        <div class="calTableCell">29</div>
+                                        <div class="calTableCell">30</div>
+                                        <div class="calTableCell"></div>
+                                        <div class="calTableCell"></div>
+                                        <div class="calTableCell"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab" id="tabTimer">
+                    <div class="tabContent">
+                        <br />
+                        <h3>Temporizador</h3>
+                        <div id="timerCenter">
+                            <div id="timerDisplay">0:00:00</div>
+                            <button id="startButton">Start Counter</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="tabSubjects"></div>
+                <div class="tab" id="tabSubjEdit">
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
