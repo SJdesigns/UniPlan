@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login - UniPlan</title>
+	<link rel="stylesheet" type="text/css" href="css/login.css">
+	<link rel="shortcut icon" type="image/x-icon" href="img/logo.png">
+	<meta name="theme-color" content="#ffd000">
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<script type="text/javascript" src="js/moment.js"></script>
+	<script type="text/javascript">
+		const supabaseUrl = 'https://tydeunwzwbepkhgzofmt.supabase.co/';
+		const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5ZGV1bnd6d2JlcGtoZ3pvZm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzA5OTEsImV4cCI6MjA2MDQwNjk5MX0.xDFOpW2qVTfWeDEUP9PUxfx4HSRLeqkKynBeUHRY1yo';
+		const supabasePublicClient = supabase.createClient(supabaseUrl,supabaseKey);
+	</script>
+	<script type="text/javascript" src="js/login.js"></script>
+</head>
+<body>
+	<div id="errorReporting">
+	</div>
+	<div id="container">
+		<div id="loginCenter">
+			<div id="loginTitle">
+				<h2>UniPlan</h2>
+			</div>
+			<div id="loginForm">
+				<div id="loginServiceInfo">
+					<p></p>
+				</div>
+				<form id="loginFormElement">
+					<div class="loginFormItem">
+						<label for="usernameInput">
+							<p>usuario</p>
+						</label>
+						<div class="inputArea">
+							<input class="formInput" id="usernameInput" type="text" name="MealPlannerUsername" spellcheck="false" placeholder="introduce tu usuario" autocapitalize="off" autofocus="" />
+							<div class="inputCover"></div>
+						</div>
+					</div>
+					<div class="loginFormItem">
+						<label for="passwordInput"><p>password</p></label>
+						<div class="inputArea">
+							<input class="formInput" id="passwordInput" type="password" name="password" placeholder="introduce tu contraseña" />
+							<div class="inputCover"></div>
+						</div>
+					</div>
+					<input id="loginSubmitInput" type="submit" />
+					<div class="loginFormItem">
+						<label id="loginSubmitLabel" for="loginSubmitInput">
+							<div id="loginSubmitButton">
+								<p>Iniciar sesión</p>
+								<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg>
+							</div>
+						</label>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

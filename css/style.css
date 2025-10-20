@@ -8,6 +8,11 @@
 
 :root {
     --primary: #ffd000;
+    --timePassed: #FF0000;
+    --timeThisWeek: #FF6600;
+    --timeSecondWeek: #FFCC00;
+    --timeThirdWeek: #00c853;
+    --timeAwayWeek: #cccccc;
 }
 
 * {
@@ -511,9 +516,11 @@ main {
 .calSubjectCell { width: 380px; }
 .calActValueCell { width: 100px; }
 
-.calRelTimeAlert { background-color: #f70000; color: #fff; }
-.calRelTimeWarning { background-color: var(--primary); }
-.calRelTimeNormal { background-color: #ccc; }
+.calRelTimeInminent { background-color: var(--timePassed); color: #fff; }
+.calRelTimeThisWeek { background-color: var(--timeThisWeek); }
+.calRelTimeSecondWeek { background-color: var(--timeSecondWeek); }
+.calRelTimeThirdWeek { background-color: var(--timeThirdWeek); }
+.calRelTimeAwayWeek { background-color: var(--timeAwayWeek); }
 
 /* ---- timer ---- */
 
@@ -798,6 +805,12 @@ main {
 }
 .activityDateAway {
 }
+
+.pendingTimePassed { background-color: var(--timePassed);color: #fff; }
+.pendingTimeThisWeek { background-color: var(--timeThisWeek); }
+.pendingTimeSecondWeek { background-color: var(--timeSecondWeek); }
+.pendingTimeThirdWeek { background-color: var(--timeThirdWeek); }
+.pendingTimeAwayWeek { background-color: var(--timeAwayWeek); }
 
 .planningRowCalifications { font-size: 13pt; height: 48px; background-color: rgba(255,208,0,.33); border-bottom: 1px solid rgba(255,208,0,.67); }
 .planningRowCalifTitle { height: 54px; background-color: rgba(255,208,0,.67); border-bottom: rgba(255,208,0,.67); }

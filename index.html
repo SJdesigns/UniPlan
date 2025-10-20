@@ -14,16 +14,15 @@
 		const supabaseUrl = 'https://tydeunwzwbepkhgzofmt.supabase.co/';
 		const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5ZGV1bnd6d2JlcGtoZ3pvZm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzA5OTEsImV4cCI6MjA2MDQwNjk5MX0.xDFOpW2qVTfWeDEUP9PUxfx4HSRLeqkKynBeUHRY1yo';
         var supabasePublicClient;
-        console.log(typeof supabase);
         if (typeof supabase !== 'undefined') {
             console.log('definido');
-    		console.log(typeof supabase);
             supabasePublicClient = supabase.createClient(supabaseUrl,supabaseKey);
         } else {
             console.log('no definido');
         }
 	</script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/timer.js"></script>
 </head>
 <body>
     <div id="loading">
@@ -177,7 +176,7 @@
                 <div class="tab" id="tabTimer">
                     <div class="tabContent">
                         <br />
-                        <h3>Temporizador</h3>
+                        <h3>Temporizador (en desarrollo)</h3>
                         <div id="timerCenter">
                             <div id="timerDisplay">0:00:00</div>
                             <button id="startButton">Start Counter</button>

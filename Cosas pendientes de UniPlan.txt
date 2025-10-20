@@ -4,7 +4,5 @@ Cosas pendientes de UniPlan
 - Rehacer por completo el reloj pomodoro para gestionar los tiempos de estudio y descanso.
 - Incluir informacion sobre tareas pendientes de cada asignatura en el home como un aviso.
 - Rehacer la cabecera de la home para que sea mas bonita.
-- Utilizar git para gestionar las versiones del proyecto.
-- Subir proyecto a Github y a Vercel para poder acceder desde cualquier sitio.
 - Incluir inicio de sesion de usuario para que los datos sean privados.
 - Crear pagina simple de usuario para gestionar los datos de la cuenta y configuraciones basicas.

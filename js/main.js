@@ -1,13 +1,10 @@
 // UniPlan v1.1
 
-var userData = {
-    'userId': 'a70e75ff-2aa7-4958-bcc9-8de8977d74de',
-    'username': 'sjalvarez',
-    'joinDate': 1745182323199,
-    'theme': 'light',
-    'degreeName': 'Administración y dirección de empresas',
-    'degreeUni': 'Universidad Internacional de La Rioja',
-};
+if (localStorage.getItem('uniplan-user') === null) {
+	window.location = './login.html';
+} else {
+    var userData = JSON.parse(localStorage.getItem('uniplan-user'));
+}
 
 if (!localStorage.getItem('uniplan-settings') ) {
     var settings = {
@@ -31,6 +28,7 @@ if (!localStorage.getItem('uniplan-lastRequestedData')) {
     var lastRequestedData = JSON.parse(localStorage.getItem('uniplan-lastRequestedData'));
 }
 
+// global variables
 var userId = userData.userId;
 
 var appName = 'UniPlan';
@@ -120,7 +118,7 @@ function getUserWeeks() {
                 userWeeks = weekList;
                 lastRequestedData['weeks'] = userWeeks;
                 localStorage.setItem('uniplan-lastRequestedData',JSON.stringify(lastRequestedData));
-                console.log(userWeeks);
+                //console.log(userWeeks);
             }
         } catch (error) {
             console.log(error);
@@ -488,16 +486,18 @@ function showCalendarTab() {
                     htmlCalendarList += '<div class="calItemCell calDateCell"><p>'+calListObject[j].actDate+'</p></div>';
                     if (calListObject[j].actRelTime < 7) {
                         if (calListObject[j].actRelTime == 1) {
-                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeAlert"><p>último día</p></div>';
+                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeInminent"><p>entrega hoy</p></div>';
                         } else if (calListObject[j].actRelTime == 2) {
-                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeAlert"><p>entrega mañana</p></div>';
+                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeInminent"><p>entrega mañana</p></div>';
                         } else {
-                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeAlert"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
+                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeThisWeek"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
                         }
                     } else if (calListObject[j].actRelTime < 14) {
-                        htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeWarning"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
+                        htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeSecondWeek"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
+                    } else if (calListObject[j].actRelTime < 21) {
+                        htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeThirdWeek"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
                     } else {
-                        htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeNormal"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
+                        htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeAwayWeek"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
                     }
                     if (calListObject[j].actType == 'act') {
                         htmlCalendarList += '<div class="calItemCell calTypeCell"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notebook-pen-icon lucide-notebook-pen"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg></div>';
@@ -645,94 +645,6 @@ function loadCalendarTables() {
     $('#calendarMonthTable').html(htmlCalTables);
 }
 
-function showTimerTab() {
-    console.log('showTimerTab');
-
-    $('#tabTimer').show();
-
-
-    let intervalId = null;
-    let currentSeconds = 0;
-    let totalSecondsParam = 0; // Will be set when starting the counter
-    let isPaused = false;
-
-    /**
-     * Formats a given number of seconds into h:mm:ss format.
-     * @param {number} seconds - The total seconds to format.
-     * @returns {string} The formatted time string (h:mm:ss).
-     */
-    function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
-
-        const pad = (num) => num.toString().padStart(2, '0');
-
-        return `${hours}:${pad(minutes)}:${pad(remainingSeconds)}`;
-    }
-
-    /**
-     * Starts the counter from currentSeconds up to totalSecondsParam.
-     * @param {number} totalSeconds - The total number of seconds the counter should reach.
-     */
-
-    function startCounter(totalSeconds) {
-            // Si ya hay un intervalo activo, no hacemos nada a menos que esté pausado y queramos reanudar.
-            if (intervalId !== null && !isPaused) {
-                return; // Si ya está corriendo y no está pausado, salimos.
-            }
-
-            totalSecondsParam = totalSeconds;
-            isPaused = false;
-            //document.getElementById('pauseButton').textContent = 'Pause Counter'; // Aseguramos el texto correcto
-
-            // Si hay un intervalo y está pausado, solo lo "reanuda" al poner isPaused a false.
-            // Si no hay intervalo, lo creamos.
-            if (intervalId === null) {
-                 // Actualizar el display inmediatamente para evitar un retraso de 1s al inicio
-                document.getElementById('timerDisplay').textContent = formatTime(currentSeconds);
-
-                intervalId = setInterval(() => {
-                    if (!isPaused) {
-                        if (currentSeconds < totalSecondsParam) {
-                            currentSeconds++;
-                            document.getElementById('timerDisplay').textContent = formatTime(currentSeconds);
-                        } else {
-                            clearInterval(intervalId);
-                            intervalId = null;
-                            console.log("Counter finished!");
-                        }
-                    }
-                }, 1000);
-            }
-        }
-
-    function togglePause() {
-        // Solo pausamos/reanudamos si hay un contador activo
-        if (intervalId !== null) {
-            isPaused = !isPaused;
-            const pauseButton = document.getElementById('pauseButton');
-            if (isPaused) {
-                pauseButton.textContent = 'Resume Counter';
-            } else {
-                pauseButton.textContent = 'Pause Counter';
-            }
-        }
-    }
-
-    document.getElementById('startButton').addEventListener('click', () => {
-        // Definimos aquí el total de segundos para el contador al iniciar.
-        // Por ejemplo, 300 segundos = 5 minutos.
-        const initialTotalSeconds = 300;
-
-        if (intervalId === null) { // Si no hay ningún contador activo, lo iniciamos.
-            startCounter(initialTotalSeconds);
-        } else if (isPaused) { // Si hay un contador, pero está pausado, lo reanudamos.
-            togglePause(); // Esto cambiará isPaused a false y el contador se reanudará.
-        }
-    });
-}
-
 function showSubjectTab(subjId) {
     console.log('showSubjectTab('+subjId+')');
 
@@ -839,7 +751,7 @@ function subjectTemplate(subjId) {
                                 }
                                 htmlSubjectTemplate += '<div class="planningCell planningWeekNumber"><p>S'+userWeek.weekOrder+'</p></div>';
                                 htmlSubjectTemplate += '<div class="planningCell planningWeekDate"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
-                                if (userWeek.weekLesson2== null) {
+                                if (userWeek.weekLesson2==null ||userWeek.weekLesson2=='') {
                                     htmlSubjectTemplate += '<div class="planningCell planningWeekLesson"><p>'+userWeek.weekLesson1+'</p></div>';
                                 } else {
                                     htmlSubjectTemplate += '<div class="planningCell planningWeekLesson"><p>'+userWeek.weekLesson1+', '+userWeek.weekLesson2+'</p></div>';
@@ -903,12 +815,20 @@ function subjectTemplate(subjId) {
                             if (act.actType == 'act') {
                                 htmlActList += '<div class="planningRow">';
                                     htmlActList += '<div class="planningCell planningWeekName"><p>'+act.actName+'</p></div>';
-                                    if (dateDiff < 0) {
-                                        htmlActList += '<div class="planningCell planningWeekDate activityDatePast"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
-                                    } else if (dateDiff < 7) {
-                                        htmlActList += '<div class="planningCell planningWeekDate activityDateNear"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
-                                    } else {
-                                        htmlActList += '<div class="planningCell planningWeekDate activityDateAway"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
+                                    console.log(dateDiff);
+                                    console.log(dateDiff < 0);
+                                    console.log(dateDiff < 7);
+                                    console.log(dateDiff < 14);
+                                    if (dateDiff < 0) { // fecha pasada
+                                        htmlActList += '<div class="planningCell planningWeekDate pendingTimePassed"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
+                                    } else if (dateDiff < 7) { // en menos de una semana
+                                        htmlActList += '<div class="planningCell planningWeekDate pendingTimeThisWeek"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
+                                    } else if (dateDiff < 14) { // en menos de dos semanas
+                                        htmlActList += '<div class="planningCell planningWeekDate pendingTimeSecondWeek"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
+                                    } else if (dateDiff < 21) { // en menos de tres semanas
+                                        htmlActList += '<div class="planningCell planningWeekDate pendingTimeThirdWeek"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
+                                    } else { // mas de tres semanas adelante
+                                        htmlActList += '<div class="planningCell planningWeekDate pendingTimeAwayWeek"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
                                     }
                                     htmlActList += '<div class="planningCell planningWeekValue"><p>'+act.actValue+'</p></div>';
                                     htmlActList += '<div class="planningCell planningWeekCalification"><p>'+act.actCalif+'</p></div>';
@@ -1999,3 +1919,23 @@ function weekOfYear(date) {
     startOfYear.setDate(startOfYear.getDate() + (startOfYear.getDay() % 7));
     return Math.round((date - startOfYear) / (7 * 24 * 3600 * 1000));
 };
+
+function timeDifference(timestampUnix) {
+  // Convertir el timestamp a milisegundos
+  var fechaPasada = new Date(timestampUnix * 1000);
+  var fechaActual = new Date();
+
+  // Calcular la diferencia en milisegundos
+  var diferenciaMs = fechaActual - fechaPasada;
+
+  // Convertir a minutos
+  var diferenciaMin = Math.floor(diferenciaMs / 60000);
+
+  // Mostrar en horas si es mayor o igual a 60 minutos
+  if (diferenciaMin >= 60) {
+    var diferenciaHoras = Math.floor(diferenciaMin / 60);
+    return diferenciaHoras + " horas";
+  } else {
+    return diferenciaMin + " minutos";
+  }
+}
