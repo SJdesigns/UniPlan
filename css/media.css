@@ -1,0 +1,143 @@
+/* -------- media queries file -------- */
+
+/* ---- dashboard tab ---- */
+
+/* ---- calendar tab ---- */
+@media only screen and (max-width: 1380px) {
+    #tabCalendar .tabContent {
+        padding: 10px 50px;
+    }
+    .calDateCell { width: 110px; }
+    .calRelTimeCell { width: 130px; }
+    .calEventCell { width: 130px; }
+    .calSubjectCell { width: 360px; }
+}
+
+@media only screen and (max-width: 1250px) {
+    #calendarContent {
+        flex-direction: column-reverse;
+    }
+
+    #calendarMonthTable {
+        width: 100%;
+        flex-direction: row;
+        gap: 60px;
+        padding-top: 0px;
+        margin-left: 0px;
+        margin-bottom: 20px;
+    }
+
+    #calTablesLegend {
+        width: 100%;
+    }
+
+    .calItem {
+        height: 62px;
+    }
+
+    .calTableItem {
+        margin-bottom: 0px;
+    }
+
+    .calRelTimeCell {
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    #calendarMonthTable {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #calTablesLegend {
+        width: 100%;
+        display: flex;
+    }
+
+    .calTableItem {
+        margin-right: 50px;
+    }
+}
+
+@media only screen and (max-width: 670px) {
+    #tabCalendar .tabContent {
+        padding: 10px 0px;
+    }
+
+    #calendarMonthTable {
+        gap: 20px;
+        padding: 0px 20px;
+    }
+
+    .calItem {
+        border-radius: 0px;
+    }
+
+    .calTableItem {
+        margin-right: 0px;
+    }
+
+    #calTablesLegend {
+        display: none;
+    }
+
+    #calendarEventList h3 {
+        padding: 0px 12px;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .calDateCell, .calRelTimeCell {
+        padding: 0px 6px;
+    }
+
+    .calEventCell {
+        display: none;
+    }
+
+    .calTypeCell {
+        padding: 0px 0px 0px 8px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #calendarMonthTable {
+        gap: 0px;
+        padding: 0px;
+    }
+
+    .calTableItem {
+        width: 200px;
+    }
+
+    .calTableRow {
+        height: 26px;
+    }
+
+    .calTableCell {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+@media only screen and (max-width: 430px) {
+    .calValueCell {
+        display: none;
+    }
+
+    #calendarMonthTable {
+        justify-content: space-around;
+    }
+
+    .calTableItem {
+        width: 180px;
+    }
+}
+
+/* ---- subject tab ---- */
+
+@media only screen and (max-width: 430px) {
+    
+}

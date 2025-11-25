@@ -8,6 +8,7 @@
 
 :root {
     --primary: #ffd000;
+    --secondary: #ffd00044;
     --timePassed: #FF0000;
     --timeThisWeek: #FF6600;
     --timeSecondWeek: #FFCC00;
@@ -68,7 +69,61 @@ div#container {
     position: absolute;
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
     display: flex;
+}
+
+#headerMobile {
+    position: absolute;
+    width: 100%;
+    height: 80px;
+    bottom: 0px;
+    background-color: var(--primary);
+    z-index: 10;
+    display: none;
+}
+
+#headerLogoMobile {
+    width: 40px;
+    height: 40px;
+    margin-top: 4px;
+    margin-left: 20px;
+    margin-right: 12px;
+}
+
+.navItemMobile {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    margin: 0px 6px;
+    padding: 0px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.navItemMobileFrame {
+    position: relative;
+    width: 100%;
+    height: 42px;
+    border-radius: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navItemMobileFrame:hover {
+    background-color: rgba(0,0,0,.08);
+}
+
+.navItemMobileFrame svg {
+    width: 32px;
+    height: 32px;
+}
+
+.navItemMobileActive .navItemMobileFrame {
+    background-color: rgba(0,0,0,.08);
 }
 
 header {
@@ -157,6 +212,27 @@ main {
 
 /* ---- home ---- */
 
+.tabTitle {
+    padding: 8px 14px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    cursor: default;
+}
+
+.tabTitleLeft {
+    box-sizing: border-box;
+    font-size: 24pt;
+    display: flex;
+    align-items: center;
+}
+
+.tabTitle svg {
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+}
+
 .tabHomeHeader {
     position: relative;
     width: 100%;
@@ -171,7 +247,7 @@ main {
     position: relative;
     width: 100%;
     height: 80px;
-    margin: 24px 0px 20px;
+    margin: 5px 0px 20px;
     box-sizing: border-box;
     border-radius: 12px;
     background-color: #f4f4f4;
@@ -224,6 +300,7 @@ main {
 }
 
 #homeDegreeName {
+    white-space: nowrap;
     display: flex;
 }
 
@@ -318,7 +395,7 @@ main {
 .homeSubjRow {
     position: relative;
     width: 100%;
-    height: 36px;
+    height: 38px;
     border-bottom: 1px solid #ccc;
     background-color: #f4f4f4;
     display: flex;
@@ -329,6 +406,7 @@ main {
     background-color: #ddd;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     cursor: default;
 }
 
@@ -383,6 +461,7 @@ main {
 
 #calendarEventList {
     flex: 1;
+    width: 100%;
     height: auto;
     margin-right: 20px;
 }
@@ -461,6 +540,7 @@ main {
 
 .calLegendsColor {
     width: 17px;
+    min-width: 17px;
     height: 17px;
     border-radius: 5px;
     background-color: #eee;
@@ -485,6 +565,14 @@ main {
     margin-bottom: 8px;
     color: #aaa;
     cursor: default;
+}
+
+#calListNoActivities {
+    padding: 22px 30px;
+    box-sizing: border-box;
+    color: #333;
+    border-radius: 14px;
+    background-color: #f4f4f4;
 }
 
 .calItem {
@@ -772,6 +860,8 @@ main {
 .planningWeekEditOpt { width: 110px; }
 .planningWeekCheckbox { width: 80px; }
 
+.planningCellNoResults { padding: 0px 14px; box-sizing: border-box; }
+
 .planningWeekWatch, .planningWeekSummary, .planningWeekExercises, .planningWeekStudy {
     border-right: 1px inset transparent;
     border-left: 1px inset transparent;
@@ -787,7 +877,7 @@ main {
 }
 
 .planningWeekName { width: 110px; }
-.planningWeekDate { width: 140px; }
+.planningWeekDate { width: 140px; min-width: 92px; }
 .planningWeekValue { width: 110px; }
 .planningWeekCalification { width: 110px; }
 
@@ -1028,4 +1118,219 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* -------- media queries -------- */
+
+@media only screen and (max-width: 1200px) {
+	.homeSubjCellName {
+		width: 310px;
+	}
+
+    #homeDegreeLeft {
+        max-width: 55%;
+        overflow: hidden;
+    }
+
+    #homeDegreeName {
+        font-size: 20pt;
+        white-space: wrap;
+    }
+
+    #homeDegreeCollege {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    #homeDegreeLeft {
+        padding-left: 10px;
+    }
+
+    #homeDegreeRight {
+        padding-right: 10px;
+    }
+
+    #homeDegreeCredits > div {
+        width: 130px;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    #container {
+        padding-bottom: 80px;
+    }
+
+    header {
+        display: none;
+    }
+
+    #headerMobile {
+        display: flex;
+    }
+
+    .tabContent {
+        padding: 10px 40px;
+    }
+
+    .tabHeader {
+        padding: 15px 32px 6px;
+    }
+
+    .subjectData {
+        padding: 0px 40px 5px;
+        display: block;
+    }
+
+    .subjectDataLeft, .subjectDataRight {
+        width: 100%;
+    }
+
+    .subjStatusOngoing {
+        padding: 6px 10px;
+        border-radius: 10px;
+    }
+
+    .planningRowCalificationsBottom {
+        margin-bottom: 15px;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    #tabHomeDegree {
+        height: auto;
+    }
+
+    #homeDegreeTop {
+        height: auto;
+        padding-top: 4px;
+        flex-direction: column;
+    }
+
+    #homeDegreeLeft {
+        text-align: center;
+        max-width: 100%;
+        padding-left: 0px;
+    }
+
+    #homeDegreeIcon {
+        display: none;
+    }
+
+    #homeDegreeRight {
+        padding-right: 0px;
+    }
+}
+
+@media only screen and (max-width: 620px) {
+    .tabContent {
+        padding: 8px 12px;
+    }
+
+    .subjectData {
+        padding: 0px 28px 5px;
+    }
+
+    .tabHeaderEdit {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    .subjectTitle h2 {
+        font-size: 18pt;
+    }
+
+    .subjectTitle p {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .tabContent {
+        padding: 8px 0px;
+    }
+
+    #tabHomeDegree {
+        border-radius: 0px;
+        background-color: var(--primary);
+        background-color: var(--secondary);
+        border: 0px;
+    }
+
+    #homeDegreeProgressBar {
+        border-radius: 0px;
+    }
+
+    #tabHomeSearchBar {
+        padding: 0px 12px;
+    }
+
+    .homeYearSubjList {
+        border-radius: 0px;
+    }
+
+    .homeSubjCellYear {
+        width: auto;
+        padding: 0px 10px;
+    }
+
+    .homeSubjCellCode { width: 80px; }
+    .homeSubjCellCredits { width: 100px; }
+    .homeSubjCellQuarter { width: 40px; padding: 0px 5px; }
+    .homeSubjCellStatus { width: 120px; }
+    .homeSubjCellGrade { display: none; }
+
+    .homeSubjRow {
+        height: 48px;
+    }
+
+    .tabHeader {
+        padding: 12px 12px 0px;
+    }
+
+    .tabHeaderLeft {
+        align-items: center;
+    }
+
+    .subjectTableTitle {
+        margin-left: 8px;
+    }
+
+    .subjectCodeBox {
+        width: 54px;
+        min-width: 54px;
+        height: 54px;
+        font-size: 18pt;
+    }
+
+    .subjectData {
+        padding: 0px 0px 5px;
+    }
+
+    .planningRowTitle .planningWeekWatch, .planningRowTitle .planningWeekSummary, .planningRowTitle .planningWeekExercises, .planningRowTitle .planningWeekStudy {
+        white-space: nowrap;
+        overflow: hidden;
+        text-align: left;
+        justify-content: left;
+    }
+
+    .planningCellTrue p {
+        display: none;
+    }
+
+    .planningCellDone {
+        margin-right: 0px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .subjectTitle h2 {
+        font-size: 16pt;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .homeSubjCellCredits {
+        display: none;
+    }
 }

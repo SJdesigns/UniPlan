@@ -1,4 +1,4 @@
-// UniPlan v1.1
+// UniPlan v1.2
 
 if (localStorage.getItem('uniplan-user') === null) {
 	window.location = './login.html';
@@ -32,7 +32,7 @@ if (!localStorage.getItem('uniplan-lastRequestedData')) {
 var userId = userData.userId;
 
 var appName = 'UniPlan';
-var version = '1.1.0';
+var version = '1.2.0';
 var deployment = '12/10/2025';
 var author = '@sjdesigns';
 
@@ -48,6 +48,10 @@ $(function() {
     $('#navItemHome').on('click',function() { showTab('home',false); });
     $('#navItemCalendar').on('click',function() { showTab('calendar',false); });
     $('#navItemTimer').on('click',function() { showTab('timer',false); });
+
+    $('#navItemHomeMobile').on('click',function() { showTab('home',false); });
+    $('#navItemCalendarMobile').on('click',function() { showTab('calendar',false); });
+    $('#navItemTimerMobile').on('click',function() { showTab('timer',false); });
 
     if (settings.homeOnlyOngoing) {
         $('#homeSearchOnlyOngoing').val('ongoing');
@@ -179,6 +183,8 @@ function showHomeTab() {
     console.log('showHomeTab');
 
     $('#tabHome').show();
+    $('.navItemMobile').removeClass('navItemMobileActive');
+    $('#navItemHomeMobile').addClass('navItemMobileActive');
 
     var htmlNavSubj = '';
     var htmlTabSubj = '';
@@ -411,12 +417,15 @@ function showHomeTab() {
     });
 
     $('#navItemHome').on('click',function() { showTab('home',false); });
+    $('#navItemHomeMobile').on('click',function() { showTab('home',false); });
 }
 
 function showCalendarTab() {
     console.log('showCalendarTab');
 
     $('#tabCalendar').show();
+    $('.navItemMobile').removeClass('navItemMobileActive');
+    $('#navItemCalendarMobile').addClass('navItemMobileActive');
 
     var calListIds = [];
     var calListObject = {};
@@ -465,6 +474,7 @@ function showCalendarTab() {
     var htmlCalendarList = '';
 
     var monthPrevious = new Date('01/01/1970');
+    var calListCount = 0;
 
     for (i in calListIds) {
         for (j in calListObject) {
@@ -510,8 +520,16 @@ function showCalendarTab() {
                     htmlCalendarList += '<div class="calItemCell calSubjectCell"><p>'+calListObject[j].actSubjCode + ' - ' + calListObject[j].actSubject+'</p></div>';
                     htmlCalendarList += '<div class="calItemCell calValueCell"><p>'+calListObject[j].actValue+' pts.</p></div>';
                 htmlCalendarList += '</div>';
+
+                calListCount++;
             }
         }
+    }
+
+    if (calListCount == 0) {
+        htmlCalendarList += '<div id="calListNoActivities">';
+            htmlCalendarList += '<p>No hay actividades pendientes para los proximos meses</p>';
+        htmlCalendarList += '</div>';
     }
 
     $('#calendarList').html(htmlCalendarList);
@@ -650,6 +668,8 @@ function showSubjectTab(subjId) {
 
     $('#tabSubj-'+subjId).show();
     subjectHeaderTemplate(subjId);
+
+    $('.navItemMobile').removeClass('navItemMobileActive');
 }
 
 function subjectHeaderTemplate(subjId,tab='subj') {
@@ -715,7 +735,7 @@ function subjectTemplate(subjId) {
                         htmlSubjectTemplate += '<div class="planningRow planningRowTitle">';
                             htmlSubjectTemplate += '<div class="planningCell planningWeekNumber"><p>Semana</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningWeekDate"><p>Fecha</p></div>';
-                            htmlSubjectTemplate += '<div class="planningCell planningWeekLesson"><p>Leccion</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningWeekLesson"><p>Lección</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningWeekWatch"><p>Ver clase</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningWeekSummary"><p>Resumen</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningWeekExercises"><p>Ejercicios</p></div>';
@@ -784,6 +804,10 @@ function subjectTemplate(subjId) {
                             }
                         }
 
+                        if (countWeeks==0) {
+                            htmlSubjectTemplate += '<div class="planningRow"><div class="planningCell planningCellNoResults"><p>No se han incluido todavía las semanas</p></div></div>';
+                        }
+
                     htmlSubjectTemplate += '</div>';
                 htmlSubjectTemplate += '</div>';
 
@@ -803,6 +827,8 @@ function subjectTemplate(subjId) {
 
                     var htmlActList = '';
                     var htmlExamList = '';
+                    var countExamTotal = 0;
+                    var countActTotal = 0;
 
                     for (oi in orderKeys) {
                         var ord = orderKeys[oi];
@@ -813,12 +839,13 @@ function subjectTemplate(subjId) {
                             var dateDiff = dateDifferenceDays(fecha.getTime());
 
                             if (act.actType == 'act') {
+                                countActTotal++;
                                 htmlActList += '<div class="planningRow">';
                                     htmlActList += '<div class="planningCell planningWeekName"><p>'+act.actName+'</p></div>';
-                                    console.log(dateDiff);
+                                    /*console.log(dateDiff);
                                     console.log(dateDiff < 0);
                                     console.log(dateDiff < 7);
-                                    console.log(dateDiff < 14);
+                                    console.log(dateDiff < 14);*/
                                     if (dateDiff < 0) { // fecha pasada
                                         htmlActList += '<div class="planningCell planningWeekDate pendingTimePassed"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
                                     } else if (dateDiff < 7) { // en menos de una semana
@@ -834,6 +861,7 @@ function subjectTemplate(subjId) {
                                     htmlActList += '<div class="planningCell planningWeekCalification"><p>'+act.actCalif+'</p></div>';
                                 htmlActList += '</div>';
                             } else {
+                                countExamTotal++;
                                 htmlExamList += '<div class="planningRow">';
                                     htmlExamList += '<div class="planningCell planningWeekName"><p>'+act.actName+'</p></div>';
                                     if (dateDiff < 0) {
@@ -848,6 +876,13 @@ function subjectTemplate(subjId) {
                                 htmlExamList += '</div>';
                             }
                         }
+                    }
+
+                    if (countActTotal==0) {
+                        htmlActList += '<div class="planningRow"><div class="planningCell planningCellNoResults"><p>No hay actividades planificadas</p></div></div>';
+                    }
+                    if (countExamTotal==0) {
+                        htmlExamList += '<div class="planningRow"><div class="planningCell planningCellNoResults"><p>No hay examenes planificados</p></div></div>';
                     }
 
                     htmlSubjectTemplate += '<p class="subjectTableTitle">Actividades</p>';
@@ -894,11 +929,11 @@ function subjectTemplate(subjId) {
                         htmlSubjectTemplate += '<div class="planningCell planningCalifExtra"><p>Extraordinaria</p></div>';
                     htmlSubjectTemplate += '</div>';
 
-                    htmlSubjectTemplate += '<div class="planningRow planningRowCalifications">';
+                    htmlSubjectTemplate += '<div class="planningRow planningRowCalifications planningRowCalificationsBottom">';
 
                     for (p in userSubjects) {
                         if (userSubjects[p].subjId == subjId) {
-                            console.log(userSubjects[p]);
+                            //console.log(userSubjects[p]);
                             htmlSubjectTemplate += '<div class="planningCell planningCalifEvCont"><p>'+userSubjects[p].subjContEvaluation+'</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningCalifOrd"><p>'+userSubjects[p].subjGradeOrd+'</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningCalifExtra"><p>'+userSubjects[p].subjGradeExtra+'</p></div>';
@@ -964,6 +999,8 @@ function editSubj(subjId) {
 
     showTab('subjEdit',false);
     subjectHeaderTemplate(subjId,'edit');
+
+    $('.navItemMobile').removeClass('navItemMobileActive');
 }
 
 // ...existing code...

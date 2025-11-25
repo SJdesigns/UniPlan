@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#ffd000">
     <link rel="shortcut icon" type="image/x-icon" href="img/logo.png">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/media.css">
     <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="js/moment.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -57,6 +58,12 @@
             <section>
                 <div class="tab" id="tabHome">
                     <div class="tabContent">
+                        <div class="tabTitle">
+                            <div class="tabTitleLeft">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="96.17" height="96.21" viewBox="0 0 96.17 96.21"><title>newLogo</title><g id="Capa_3" data-name="Capa 3"><path d="M50,98.08,1.92,50,50,1.92,98.08,50ZM18.89,50,50,81.11,81.11,50,50,18.89Z" transform="translate(-1.92 -1.92)" style="fill:#ffd000"/></g><g id="Capa_4" data-name="Capa 4"><path d="M84.68,36.7l-12,5L81.05,50,49.94,81.16,28.7,59.92l-12,5L49.94,98.13,98,50Z" transform="translate(-1.92 -1.92)" style="fill:#ffc000"/><line x1="26.78" y1="58" x2="14.79" y2="62.98" style="fill:none"/><line x1="82.76" y1="34.78" x2="70.76" y2="39.75" style="fill:none"/></g></svg>
+                                <p>UniPlan</p>
+                            </div>
+                        </div>
                         <div id="tabHomeDegree">
                             <div id="homeDegreeTop">
                                 <div id="homeDegreeLeft">
@@ -65,6 +72,7 @@
                                     </div>
                                     <div id="homeDegreeLeftTxt">
                                         <h1 id="homeDegreeName"></h1>
+                                        <h1 id="homeDegreeAlt"></h1>
                                         <p id="homeDegreeCollege"></p>
                                     </div>
                                 </div>
@@ -176,11 +184,8 @@
                 <div class="tab" id="tabTimer">
                     <div class="tabContent">
                         <br />
-                        <h3>Temporizador (en desarrollo)</h3>
-                        <div id="timerCenter">
-                            <div id="timerDisplay">0:00:00</div>
-                            <button id="startButton">Start Counter</button>
-                        </div>
+                        <h3>Temporizador</h3>
+                        <p>Página en desarrollo</p>
                     </div>
                 </div>
                 <div id="tabSubjects"></div>
@@ -188,6 +193,27 @@
                 </div>
             </section>
         </main>
+    </div>
+    <div id="headerMobile">
+        <div class="navItemMobile" id="navItemHomeMobile">
+            <div class="navItemMobileFrame">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            </div>
+            <p>Home</p>
+        </div>
+        <div class="navItemMobile" id="navItemCalendarMobile">
+            <div class="navItemMobileFrame">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+            </div>
+            <p>Calendar</p>
+        </div>
+        <div class="navItemMobile" id="navItemTimerMobile">
+            <div class="navItemMobileFrame">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-icon lucide-clock"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <p>Timer</p>
+        </div>
+        <div id="navSubjectListMobile"></div>
     </div>
 </body>
 </html>

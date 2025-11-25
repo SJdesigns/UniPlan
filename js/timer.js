@@ -2,6 +2,8 @@ function showTimerTab() {
     console.log('showTimerTab');
 
     $('#tabTimer').show();
+    $('.navItemMobile').removeClass('navItemMobileActive');
+    $('#navItemTimerMobile').addClass('navItemMobileActive');
 
 
     let intervalId = null;
