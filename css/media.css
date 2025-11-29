@@ -42,6 +42,10 @@
     .calRelTimeCell {
         text-align: center;
     }
+
+    #calendarEventList {
+        margin-top: 14px;
+    }
 }
 
 @media only screen and (max-width: 950px) {
@@ -120,6 +124,18 @@
         width: 26px;
         height: 26px;
     }
+
+    #calendarEventList h3 {
+        padding: 0px 10px;
+    }
+
+    #calendarEventList {
+        margin-top: 10px;
+    }
+
+    #calendarContent {
+        padding: 10px 0px;
+    }
 }
 
 @media only screen and (max-width: 430px) {
@@ -138,6 +154,17 @@
 
 /* ---- subject tab ---- */
 
-@media only screen and (max-width: 430px) {
-    
+@media only screen and (max-width: 850px) {
+    #subjectGeneralData {
+        padding: 0px 20px 5px;
+    }
+
+    .tableTitleLong { display: none; }
+    .tableTitleShort { display: block; }
+}
+
+@media only screen and (max-width: 500px) {
+    #subjectGeneralData {
+        padding: 0px 0px 5px;
+    }
 }

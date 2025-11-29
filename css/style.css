@@ -213,7 +213,7 @@ main {
 /* ---- home ---- */
 
 .tabTitle {
-    padding: 8px 14px;
+    padding: 8px 14px 6px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -222,9 +222,34 @@ main {
 
 .tabTitleLeft {
     box-sizing: border-box;
-    font-size: 24pt;
+    font-size: 22pt;
     display: flex;
     align-items: center;
+}
+
+.tabTitleConnection {
+    position: relative;
+    width: auto;
+    padding: 5px 20px;
+    background-color: #f4f4f4;
+    border-radius: 30px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#tabTitleOffline {
+    background-color: #f004;
+}
+
+.tabTitleConnection svg {
+    width: 23px;
+    height: 23px;
+    margin-right: 9px;
+}
+
+.tabTitleConnection p {
+    font-size: 14pt;
 }
 
 .tabTitle svg {
@@ -510,7 +535,7 @@ main {
 }
 
 .calTableCellToday {
-    background-color: #eee;
+    background-color: #ddd;
 }
 
 .calTableCellEventAct {
@@ -520,6 +545,14 @@ main {
 .calTableCellEventExam {
     color: #fff;
     background-color: #f70000;
+}
+
+.calTableCellPreviousDay {
+    color: #888;
+}
+
+.calTableCellPreviousDay.calTableCellEventAct {
+    background-color: var(--secondary);
 }
 
 #calTablesLegend {
@@ -612,6 +645,27 @@ main {
 
 /* ---- timer ---- */
 
+#tabTimer .tabContent {
+    gap: 50px;
+    padding: 30px 60px;
+    display: flex;
+}
+
+#timerTabLeft {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    justify-content: center;
+}
+
+#timerTabRight {
+    position: relative;
+    width: 420px;
+    height: 100%;
+    flex-direction: column;
+    align-items: start;
+}
+
 #timerCenter {
     position: relative;
     width: 100%;
@@ -629,6 +683,10 @@ main {
     padding: 12px 30px;
     border-radius: 10px;
     font-size: 70pt;
+}
+
+#timerProgress {
+    transition: stroke-dashoffset 1s linear;
 }
 
 #startButton {
@@ -649,6 +707,10 @@ main {
     background-color: #147bce;
 }
 
+#timerTabSettings {
+    display: flex;
+    flex-wrap: wrap;
+}
 
 /* ---- subject ---- */
 
@@ -793,6 +855,14 @@ main {
 
 .planningRowTitle {
     background-color: #ddd;
+}
+
+.tableTitleLong {
+    display: block;
+}
+
+.tableTitleShort {
+    display: none;
 }
 
 .planningRowTotals {
@@ -1142,6 +1212,12 @@ body {
     }
 }
 
+@media only screen and (max-width: 1000px) {
+    #tabTimer .tabContent {
+        flex-direction: column;
+    }
+}
+
 @media only screen and (max-width: 950px) {
     #homeDegreeLeft {
         padding-left: 10px;
@@ -1243,6 +1319,10 @@ body {
     .subjectTitle p {
         display: none;
     }
+
+    .subjectDataLeft {
+        padding-right: 0px;
+    }
 }
 
 @media only screen and (max-width: 500px) {
@@ -1255,6 +1335,10 @@ body {
         background-color: var(--primary);
         background-color: var(--secondary);
         border: 0px;
+    }
+
+    #homeDegreeCredits {
+        margin-top: 5px;
     }
 
     #homeDegreeProgressBar {
@@ -1321,6 +1405,10 @@ body {
     .planningCellDone {
         margin-right: 0px;
     }
+
+    #tabTimer .tabContent {
+        padding: 30px 20px;
+    }
 }
 
 @media only screen and (max-width: 480px) {
@@ -1334,3 +1422,4 @@ body {
         display: none;
     }
 }
+

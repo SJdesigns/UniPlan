@@ -16,10 +16,10 @@
 		const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5ZGV1bnd6d2JlcGtoZ3pvZm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzA5OTEsImV4cCI6MjA2MDQwNjk5MX0.xDFOpW2qVTfWeDEUP9PUxfx4HSRLeqkKynBeUHRY1yo';
         var supabasePublicClient;
         if (typeof supabase !== 'undefined') {
-            console.log('definido');
+            //console.log('definido');
             supabasePublicClient = supabase.createClient(supabaseUrl,supabaseKey);
         } else {
-            console.log('no definido');
+            //console.log('no definido');
         }
 	</script>
     <script type="text/javascript" src="js/main.js"></script>
@@ -62,6 +62,16 @@
                             <div class="tabTitleLeft">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="96.17" height="96.21" viewBox="0 0 96.17 96.21"><title>newLogo</title><g id="Capa_3" data-name="Capa 3"><path d="M50,98.08,1.92,50,50,1.92,98.08,50ZM18.89,50,50,81.11,81.11,50,50,18.89Z" transform="translate(-1.92 -1.92)" style="fill:#ffd000"/></g><g id="Capa_4" data-name="Capa 4"><path d="M84.68,36.7l-12,5L81.05,50,49.94,81.16,28.7,59.92l-12,5L49.94,98.13,98,50Z" transform="translate(-1.92 -1.92)" style="fill:#ffc000"/><line x1="26.78" y1="58" x2="14.79" y2="62.98" style="fill:none"/><line x1="82.76" y1="34.78" x2="70.76" y2="39.75" style="fill:none"/></g></svg>
                                 <p>UniPlan</p>
+                            </div>
+                            <div class="tabTitleRight">
+                                <div class="tabTitleConnection" id="tabTitleOnline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-check-icon lucide-cloud-check"><path d="m17 15-5.5 5.5L9 18"/><path d="M5 17.743A7 7 0 1 1 15.71 10h1.79a4.5 4.5 0 0 1 1.5 8.742"/></svg>
+                                    <p>online</p>
+                                </div>
+                                <div class="tabTitleConnection" id="tabTitleOffline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-off-icon lucide-cloud-off"><path d="m2 2 20 20"/><path d="M5.782 5.782A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.307-.193"/><path d="M21.532 16.5A4.5 4.5 0 0 0 17.5 10h-1.79A7.008 7.008 0 0 0 10 5.07"/></svg>
+                                    <p>offline</p>
+                                </div>
                             </div>
                         </div>
                         <div id="tabHomeDegree">
@@ -107,7 +117,6 @@
                         </div>
                         <div id="tabHomeSubjectList"></div>
                     </div>
-                    <div id="homeSubjectList"></div>
                 </div>
                 <div class="tab" id="tabCalendar">
                     <div class="tabContent">
@@ -183,9 +192,10 @@
                 </div>
                 <div class="tab" id="tabTimer">
                     <div class="tabContent">
-                        <br />
-                        <h3>Temporizador</h3>
-                        <p>Página en desarrollo</p>
+                        <div id="timerTabLeft">
+                        </div>
+                        <div id="timerTabRight">
+                        </div>
                     </div>
                 </div>
                 <div id="tabSubjects"></div>

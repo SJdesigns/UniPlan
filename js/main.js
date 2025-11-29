@@ -1,4 +1,4 @@
-// UniPlan v1.2
+// UniPlan v1.3
 
 if (localStorage.getItem('uniplan-user') === null) {
 	window.location = './login.html';
@@ -8,6 +8,7 @@ if (localStorage.getItem('uniplan-user') === null) {
 
 if (!localStorage.getItem('uniplan-settings') ) {
     var settings = {
+        'debug': false,
         'homeOnlyOngoing': false,
         'homeYear1Collapsed': false,
         'homeYear2Collapsed': false,
@@ -32,15 +33,16 @@ if (!localStorage.getItem('uniplan-lastRequestedData')) {
 var userId = userData.userId;
 
 var appName = 'UniPlan';
-var version = '1.2.0';
-var deployment = '12/10/2025';
+var version = '1.3.0';
+var deployment = '30/11/2025';
 var author = '@sjdesigns';
 
 var userSubjects = {};
 var userWeeks = {};
 var userActivities = {};
 var firstLoadDegreeProgress = true; // para evitar que se haga la animacion del progreso de creditos cada vez que se carga la home
-
+var offline = false;
+var setConnectionStatus = false;
 
 $(function() {
     loadData();
@@ -60,7 +62,7 @@ $(function() {
     }
 
     $('#homeSearchOnlyOngoing').on('change',function() {
-        console.log($('#homeSearchOnlyOngoing').val());
+        (settings.debug)?console.log($('#homeSearchOnlyOngoing').val()):'';
         if ($('#homeSearchOnlyOngoing').val() == 'all') {
             settings.homeOnlyOngoing = false;
             localStorage.setItem('uniplan-settings',JSON.stringify(settings));
@@ -70,17 +72,19 @@ $(function() {
         }
         showTab('home',false);
     });
+
+    setupKeyboardControls();
 });
 
 function loadData() {
-    console.log('loadData');
+    (settings.debug)?console.log('loadData'):'';
     getUserSubjects();
     getUserWeeks();
     getUserActivities();
 }
 
 function getUserSubjects() {
-	console.log('f:{getUserSubjects}');
+	(settings.debug)?console.log('f:{getUserSubjects}'):'';
 
 	const fetchSubjects = async () => {
 	    try {
@@ -91,27 +95,32 @@ function getUserSubjects() {
 	        	userSubjects = subjectList;
                 lastRequestedData['subjects'] = userSubjects;
                 localStorage.setItem('uniplan-lastRequestedData',JSON.stringify(lastRequestedData));
-	        	console.log(userSubjects);
+	        	(settings.debug)?console.log(userSubjects):'';
 
                 $('#loading').hide();
                 showTab('home');
+
+                if (!setConnectionStatus) { connectionStatus(); }
 	        }
 
 	    } catch (error) {
 	        console.log(error);
 
+            offline = true;
             userSubjects = lastRequestedData['subjects'];
             errorReporting('error','No se ha podido establecer conexion para recuperar las asignaturas');
 
             $('#loading').hide();
             showTab('home');
+
+            if (!setConnectionStatus) { connectionStatus(); }
 	    }
 	}
 	fetchSubjects();
 }
 
 function getUserWeeks() {
-    console.log('f:{getUserWeeks}');
+    (settings.debug)?console.log('f:{getUserWeeks}'):'';
 
     const fetchWeeks = async () => {
         try {
@@ -122,20 +131,25 @@ function getUserWeeks() {
                 userWeeks = weekList;
                 lastRequestedData['weeks'] = userWeeks;
                 localStorage.setItem('uniplan-lastRequestedData',JSON.stringify(lastRequestedData));
-                //console.log(userWeeks);
+                (settings.debug)?console.log(userWeeks):'';
+
+                if (!setConnectionStatus) { connectionStatus(); }
             }
         } catch (error) {
             console.log(error);
 
+            offline = true;
             userWeeks = lastRequestedData['weeks'];
             errorReporting('error','No se ha podido establecer conexion para recuperar las semanas');
+
+            if (!setConnectionStatus) { connectionStatus(); }
         }
     }
     fetchWeeks();
 }
 
 function getUserActivities() {
-    console.log('f:{getUserActivities}');
+    (settings.debug)?console.log('f:{getUserActivities}'):'';
 
     const fetchActivities = async () => {
         try {
@@ -146,20 +160,35 @@ function getUserActivities() {
                 userActivities = activitiesList;
                 lastRequestedData['activities'] = userActivities;
                 localStorage.setItem('uniplan-lastRequestedData',JSON.stringify(lastRequestedData));
-                console.log(userActivities);
+                (settings.debug)?console.log(userActivities):'';
+
+                if (!setConnectionStatus) { connectionStatus(); }
             }
         } catch (error) {
             console.log(error);
 
+            offline = true;
             userActivities = lastRequestedData['activities'];
             errorReporting('error','No se ha podido establecer conexion para recuperar las actividades');
+
+            if (!setConnectionStatus) { connectionStatus(); }
         }
     }
     fetchActivities();
 }
 
+function connectionStatus() {
+    setConnectionStatus = true;
+    if (offline) {
+        console.log('No hay conexion a internet. Se muestran datos anteriores almacenados en el equipo.');
+        $('#tabTitleOffline').css('display','flex');
+    } else {
+        $('#tabTitleOnline').css('display','flex');
+    }
+}
+
 function showTab(tabName,subject) {
-    console.log('showTab('+tabName+','+subject+')');
+    (settings.debug)?console.log('showTab('+tabName+','+subject+')'):'';
     // tabName = {'dashboard', 'week', 'today', 'edit', 'settings', 'user'};
 
     $('.tab').hide();
@@ -180,7 +209,7 @@ function showTab(tabName,subject) {
 }
 
 function showHomeTab() {
-    console.log('showHomeTab');
+    (settings.debug)?console.log('showHomeTab'):'';
 
     $('#tabHome').show();
     $('.navItemMobile').removeClass('navItemMobileActive');
@@ -421,7 +450,7 @@ function showHomeTab() {
 }
 
 function showCalendarTab() {
-    console.log('showCalendarTab');
+    (settings.debug)?console.log('showCalendarTab'):'';
 
     $('#tabCalendar').show();
     $('.navItemMobile').removeClass('navItemMobileActive');
@@ -488,7 +517,7 @@ function showCalendarTab() {
 
                 if (monthAct.getTime() != monthPrevious.getTime()) {
                     monthPrevious = monthAct;
-                    console.log((fechaMes[0]));
+                    (settings.debug)?console.log((fechaMes[0])):'';
                     htmlCalendarList += '<div class="calMonthTitle"><p>'+monthTxt[fechaMes[0]-1]+' de '+fechaMes[1]+'</p></div>';
                 }
 
@@ -538,10 +567,14 @@ function showCalendarTab() {
 }
 
 function loadCalendarTables() {
-    console.log('loadCalendarTables');
+    (settings.debug)?console.log('loadCalendarTables'):'';
 
     let htmlCalTables = '';
     var today = new Date();
+
+    // fecha inicio de hoy sin hora, para comparar días
+    var todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
 
     // primero ordenamos en un array las actividades de cada dia
     const activitiesArr = Array.isArray(userActivities) ? userActivities : Object.values(userActivities || {});
@@ -556,7 +589,7 @@ function loadCalendarTables() {
         if (!activitiesByDate[key]) activitiesByDate[key] = [];
         activitiesByDate[key].push(a);
     });
-    console.log(activitiesByDate);
+    (settings.debug)?console.log(activitiesByDate):'';
 
     // ahora construimos los meses del calendario
     for (i = 0; i < 2; i++) {
@@ -626,8 +659,14 @@ function loadCalendarTables() {
                             subjName = userSubjects[subj].subjName;
                         }
                     }
-                    console.log(names[0].act+', '+names[0].subj);
+                    //console.log(names[0].act+', '+names[0].subj);
                     titleAttr = ' title="' + subjType + ' ' + names[0].act + ' - ' + subjName + '"';
+                }
+
+                // marcar días anteriores al día de hoy
+                var cellDate = new Date(year, month, d);
+                if (cellDate < todayStart) {
+                    cellClasses += ' calTableCellPreviousDay';
                 }
 
                 if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === d) {
@@ -664,7 +703,7 @@ function loadCalendarTables() {
 }
 
 function showSubjectTab(subjId) {
-    console.log('showSubjectTab('+subjId+')');
+    (settings.debug)?console.log('showSubjectTab('+subjId+')'):'';
 
     $('#tabSubj-'+subjId).show();
     subjectHeaderTemplate(subjId);
@@ -673,7 +712,7 @@ function showSubjectTab(subjId) {
 }
 
 function subjectHeaderTemplate(subjId,tab='subj') {
-    console.log('subjectHeaderTemplate');
+    (settings.debug)?console.log('subjectHeaderTemplate'):'';
     for (i in userSubjects) {
         if (userSubjects[i].subjId == subjId) {
             var htmlSubjectTemplate = '';
@@ -711,7 +750,7 @@ function subjectHeaderTemplate(subjId,tab='subj') {
         }
     }
 
-    console.log(tab);
+    (settings.debug)?console.log(tab):'';
     if (tab!='edit') {
         $('#tabSubj-'+subjId).html(htmlSubjectTemplate);
         subjectTemplate(subjId);
@@ -723,7 +762,7 @@ function subjectHeaderTemplate(subjId,tab='subj') {
 }
 
 function subjectTemplate(subjId) {
-    console.log('subjectTemplate');
+    (settings.debug)?console.log('subjectTemplate'):'';
     for (i in userSubjects) {
         if (userSubjects[i].subjId == subjId) {
             var htmlSubjectTemplate = '';
@@ -733,13 +772,13 @@ function subjectTemplate(subjId) {
                     htmlSubjectTemplate += '<div class="subjectPlanning">';
                         htmlSubjectTemplate += '<p class="subjectTableTitle">Planning</p>';
                         htmlSubjectTemplate += '<div class="planningRow planningRowTitle">';
-                            htmlSubjectTemplate += '<div class="planningCell planningWeekNumber"><p>Semana</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningWeekNumber"><p class="tableTitleLong">Semana</p><p class="tableTitleShort">Sem.</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningWeekDate"><p>Fecha</p></div>';
                             htmlSubjectTemplate += '<div class="planningCell planningWeekLesson"><p>Lección</p></div>';
-                            htmlSubjectTemplate += '<div class="planningCell planningWeekWatch"><p>Ver clase</p></div>';
-                            htmlSubjectTemplate += '<div class="planningCell planningWeekSummary"><p>Resumen</p></div>';
-                            htmlSubjectTemplate += '<div class="planningCell planningWeekExercises"><p>Ejercicios</p></div>';
-                            htmlSubjectTemplate += '<div class="planningCell planningWeekStudy"><p>Estudio</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningWeekWatch"><p class="tableTitleLong">Ver clase</p><p class="tableTitleShort">Clase</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningWeekSummary"><p class="tableTitleLong">Resumen</p><p class="tableTitleShort">Resum.</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningWeekExercises"><p class="tableTitleLong">Ejercicios</p><p class="tableTitleShort">Ejerc.</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningWeekStudy"><p class="tableTitleLong">Estudio</p><p class="tableTitleShort">Estud.</p></div>';
                         htmlSubjectTemplate += '</div>';
 
                         var weeksByOrder = {};
@@ -931,12 +970,75 @@ function subjectTemplate(subjId) {
 
                     htmlSubjectTemplate += '<div class="planningRow planningRowCalifications planningRowCalificationsBottom">';
 
+                    // calculo de la evaluacion continua
+                    var activitiesCalif = 0;
+                    for (act in userActivities) {
+                        if (userActivities[act].actSubject == subjId && userActivities[act].actType=='act') {
+                            //console.log(userActivities[act].actCalif);
+                            var actValue = parseCalif(userActivities[act].actValue);
+
+                            if (userActivities[act].actCalif == '-') {
+                                var actCalif = 0;
+                            } else {
+                                var actCalif = parseCalif(userActivities[act].actCalif);
+                            }
+
+                            var valueCalif = (actCalif * actValue) / 10;
+                            //console.log(valueCalif);
+                            activitiesCalif = activitiesCalif + valueCalif;
+                        }
+                    }
+                    for (s in userSubjects) {
+                        if (userSubjects[s].subjId == subjId) {
+                            var testsValue = userSubjects[s].subjTestsTaken*0.1;
+                            activitiesCalif = activitiesCalif + testsValue;
+                        }
+                    }
+                    var contEvaluation = (activitiesCalif * 4) / 10;
+                    contEvaluation = Math.round(contEvaluation * 100) / 100;
+                    if (contEvaluation > 4) {
+                        contEvaluation = '4.0';
+                    }
+
+                    //console.log('evaluacion continua');
+                    //console.log(contEvaluation);
+
+                    // calculo de la nota total en convocatoria ordinaria y extraordinaria
+                    var ordinaryValue = 0;
+                    var extraValue = 0;
+                    for (ex in userActivities) {
+                        if (userActivities[ex].actSubject == subjId && userActivities[ex].actType == 'exam') {
+                            if (userActivities[ex].actName == 'Ordinaria') {
+                                var ordinaryCalif = parseFloat(userActivities[ex].actCalif);
+                                ordinaryValue = ((ordinaryCalif * 6) / 10) + contEvaluation;
+                                ordinaryValue = Math.round(ordinaryValue * 100) / 100;
+                                console.log(ordinaryCalif);
+                                console.log(ordinaryValue);
+                            } else {
+                                var extraCalif = parseFloat(userActivities[ex].actCalif);
+                                extraValue = ((extraCalif * 6) / 10) + contEvaluation;
+                                extraValue = Math.round(extraValue * 100) / 100;
+                                console.log(extraCalif);
+                                console.log(extraValue);
+                            }
+                        }
+                    }
+                    if (contEvaluation == 0) {
+                        contEvaluation = '0.00';
+                    }
+                    if (ordinaryValue == 0) {
+                        ordinaryValue = '0.0';
+                    }
+                    if (extraValue == 0) {
+                        extraValue = '-';
+                    }
+
                     for (p in userSubjects) {
                         if (userSubjects[p].subjId == subjId) {
                             //console.log(userSubjects[p]);
-                            htmlSubjectTemplate += '<div class="planningCell planningCalifEvCont"><p>'+userSubjects[p].subjContEvaluation+'</p></div>';
-                            htmlSubjectTemplate += '<div class="planningCell planningCalifOrd"><p>'+userSubjects[p].subjGradeOrd+'</p></div>';
-                            htmlSubjectTemplate += '<div class="planningCell planningCalifExtra"><p>'+userSubjects[p].subjGradeExtra+'</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningCalifEvCont"><p>'+contEvaluation+'</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningCalifOrd"><p>'+ordinaryValue+'</p></div>';
+                            htmlSubjectTemplate += '<div class="planningCell planningCalifExtra"><p>'+extraValue+'</p></div>';
                         htmlSubjectTemplate += '</div>';
                         }
                     }
@@ -949,7 +1051,7 @@ function subjectTemplate(subjId) {
     $('#tabSubj-'+subjId).append(htmlSubjectTemplate);
 
     $('.tabHeaderEdit').on('click',function() {
-        console.log('edit subject data');
+        (settings.debug)?console.log('edit subject data'):'';
         editSubj(subjId);
     });
 
@@ -995,7 +1097,7 @@ function subjectTemplate(subjId) {
 }
 
 function editSubj(subjId) {
-    console.log('editSubj('+subjId+')');
+    (settings.debug)?console.log('editSubj('+subjId+')'):'';
 
     showTab('subjEdit',false);
     subjectHeaderTemplate(subjId,'edit');
@@ -1005,7 +1107,7 @@ function editSubj(subjId) {
 
 // ...existing code...
 function editSubjTemplate(subjId) {
-    console.log('editSubjTemplate');
+    (settings.debug)?console.log('editSubjTemplate'):'';
 
     for (i in userSubjects) {
         if (userSubjects[i].subjId == subjId) {
@@ -1164,7 +1266,7 @@ function editSubjTemplate(subjId) {
     $('#tabSubjEdit').append(htmlSubjectTemplate);
 
     $('.tabHeaderGoBack').on('click',function() {
-        console.log('return to subject data');
+        (settings.debug)?console.log('return to subject data'):'';
         showTab('subject',subjId);
     });
 
@@ -1178,7 +1280,7 @@ function editSubjTemplate(subjId) {
         var weekNewExercises = $('#planningRowNew').find('#subjEditExercisesCheckNew').is(':checked');
         var weekNewStudy = $('#planningRowNew').find('#subjEditStudyCheckNew').is(':checked');
         var weekSubjId = $('#planningEditsubjId').val();
-        console.log(weekNewOrder, weekNewDate, weekNewLesson1, weekNewLesson2, weekNewWatch, weekNewSummary, weekNewExercises, weekNewStudy, weekSubjId);
+        (settings.debug)?console.log(weekNewOrder, weekNewDate, weekNewLesson1, weekNewLesson2, weekNewWatch, weekNewSummary, weekNewExercises, weekNewStudy, weekSubjId):'';
         addNewWeek(weekNewOrder, weekNewDate, weekNewLesson1, weekNewLesson2, weekNewWatch, weekNewSummary, weekNewExercises, weekNewStudy, weekSubjId);
     });
 
@@ -1196,13 +1298,13 @@ function editSubjTemplate(subjId) {
         var weekNewExercises = $('#'+elemId).find('.subjEditExercises').is(':checked');
         var weekNewStudy = $('#'+elemId).find('.subjEditStudy').is(':checked');
         var weekSubjId = $('#'+elemId).find('.planningEditsubjId').val();
-        console.log(elemId.substring(16),weekNewOrder, weekNewDate, weekNewLesson1, weekNewLesson2, weekNewWatch, weekNewSummary, weekNewExercises, weekNewStudy, weekSubjId);
+        (settings.debug)?console.log(elemId.substring(16),weekNewOrder, weekNewDate, weekNewLesson1, weekNewLesson2, weekNewWatch, weekNewSummary, weekNewExercises, weekNewStudy, weekSubjId):'';
         updateWeek(elemId.substring(16),weekNewOrder, weekNewDate, weekNewLesson1, weekNewLesson2, weekNewWatch, weekNewSummary, weekNewExercises, weekNewStudy, weekSubjId);
     });
 
     $('.subjEditDelete').on('click',function() {
         var weekId = $(this).parents('.planningEditRow').attr('id').substring(16);
-        console.log(weekId);
+        (settings.debug)?console.log(weekId):'';
 
         deleteWeek(weekId, subjId);
     });
@@ -1225,13 +1327,13 @@ function editSubjTemplate(subjId) {
         var subjGeneralTestsTotal = $('#subjGeneralTestsTotal').val();
         var subjGeneralQuarter = $('#subjGeneralQuarter').val();
 
-        console.log(subjGeneralId, subjGeneralCode, subjGeneralName, subjGeneralDegree, subjGeneralYear, subjGeneralCredits, subjGeneralStatus,subjGeneralGradeOrd,subjGeneralGradeExtra,subjGeneralContEval,subjGeneralExamOrd,subjGeneralExamExtra,subjGeneralTestsTaken,subjGeneralTestsTotal,subjGeneralQuarter);
+        (settings.debug)?console.log(subjGeneralId, subjGeneralCode, subjGeneralName, subjGeneralDegree, subjGeneralYear, subjGeneralCredits, subjGeneralStatus,subjGeneralGradeOrd,subjGeneralGradeExtra,subjGeneralContEval,subjGeneralExamOrd,subjGeneralExamExtra,subjGeneralTestsTaken,subjGeneralTestsTotal,subjGeneralQuarter):'';
         updateGeneralSubj(subjGeneralId, subjGeneralCode, subjGeneralName, subjGeneralDegree, subjGeneralYear, subjGeneralCredits, subjGeneralStatus,subjGeneralGradeOrd,subjGeneralGradeExtra,subjGeneralContEval,subjGeneralExamOrd,subjGeneralExamExtra,subjGeneralTestsTaken,subjGeneralTestsTotal,subjGeneralQuarter);
     });
 }
 
 function editSubjTemplateRight(subjId) {
-    console.log('editSubjTemplateRight('+subjId+')');
+    (settings.debug)?console.log('editSubjTemplateRight('+subjId+')'):'';
 
     var htmlEditActivities = '';
 
@@ -1384,7 +1486,7 @@ function editSubjTemplateRight(subjId) {
     $('.subjectDataRight').html(htmlEditActivities);
 
     $('.subjActEditSave').on('click',function() {
-        console.log('Añadir nueva actividad');
+        (settings.debug)?console.log('Añadir nueva actividad'):'';
         var actNewName = $(this).parents('#planningActEditNew').find('.activityNameInput').val();
         var actNewOrder = $(this).parents('#planningActEditNew').find('.activityOrderInput').val();
         var actNewDate = $(this).parents('#planningActEditNew').find('.activityDateInput').val();
@@ -1394,15 +1496,15 @@ function editSubjTemplateRight(subjId) {
         var actSubjId = $(this).parents('#planningActEditNew').find('.planningActEditsubjId').val();
         var actType = 'act';
 
-        console.log(actNewName + actNewOrder + actNewDate + actNewValue + actNewExamTime + actNewCalif + actSubjId + actType);
+        (settings.debug)?console.log(actNewName + actNewOrder + actNewDate + actNewValue + actNewExamTime + actNewCalif + actSubjId + actType):'';
         addNewActivity(actNewName,actNewOrder,actNewDate,actNewValue,actNewExamTime,actNewCalif,actSubjId,actType);
     });
 
     $('.subjActEditUpdate').on('click',function() {
         var elemId = $(this).parents('.planningEditRow').attr('id');
-        console.log($(this).parents('.planningEditRow'));
-        console.log(elemId);
-        console.log($('#'+elemId));
+        (settings.debug)?console.log($(this).parents('.planningEditRow')):'';
+        (settings.debug)?console.log(elemId):'';
+        (settings.debug)?console.log($('#'+elemId)):'';
         var actNewName = $(this).parents('.planningEditRow').find('.activityNameInput').val();
         var actNewOrder = $(this).parents('.planningEditRow').find('.activityOrderInput').val();
         var actNewDate = $(this).parents('.planningEditRow').find('.activityDateInput').val();
@@ -1412,20 +1514,20 @@ function editSubjTemplateRight(subjId) {
         var actSubjId = $(this).parents('.planningEditRow').find('.planningActEditsubjId').val();
         var actType = 'act';
 
-        console.log(elemId.substring(16),actNewName, actNewOrder, actNewDate, actNewValue, actNewExamTime, actNewCalif, actSubjId, actType);
+        (settings.debug)?console.log(elemId.substring(16),actNewName, actNewOrder, actNewDate, actNewValue, actNewExamTime, actNewCalif, actSubjId, actType):'';
         updateActivity(elemId.substring(16),actNewName, actNewOrder, actNewDate, actNewValue, actNewExamTime, actNewCalif, actSubjId, actType);
     });
 
     $('.subjActEditDelete').on('click',function() {
         var actId = $(this).parents('.planningEditRow').attr('id').substring(16);
-        console.log(actId);
+        (settings.debug)?console.log(actId):'';
 
         deleteActivity(actId, subjId);
     });
 
     $('.subjExamUpdate').on('click',function() {
         var elemId = $(this).parents('.planningEditExam').attr('id').substring(17);
-        console.log(elemId);
+        (settings.debug)?console.log(elemId):'';
 
         var actNewName = $(this).parents('.planningEditExam').find('.planningActName input').val();
         var actNewOrder = $(this).parents('.planningEditExam').find('.planningActOrder input').val();
@@ -1436,19 +1538,19 @@ function editSubjTemplateRight(subjId) {
         var actSubjId = $(this).parents('.planningEditExam').find('.planningEditActSubject').val();
         var actType = 'exam';
 
-        console.log(elemId, actNewName, actNewOrder, actNewDate, actNewValue, actNewExamTime, actNewCalif, actSubjId, actType);
+        (settings.debug)?console.log(elemId, actNewName, actNewOrder, actNewDate, actNewValue, actNewExamTime, actNewCalif, actSubjId, actType):'';
         updateActivity(elemId, actNewName, actNewOrder, actNewDate, actNewValue, actNewExamTime, actNewCalif, actSubjId, actType);
     });
 
     $('.subjExamDelete').on('click',function() {
         var actId = $(this).parents('.planningEditExam').attr('id').substring(17);
-        console.log(actId);
+        (settings.debug)?console.log(actId):'';
 
         deleteActivity(actId, subjId);
     });
 
     $('.subjExamSave').on('click',function() {
-        console.log('Añadir nuevo examen');
+        (settings.debug)?console.log('Añadir nuevo examen'):'';
         var actNewName = $(this).parents('#newExamRow').find('.newExamName').val();
         var actNewOrder = $(this).parents('#newExamRow').find('.newExamOrder').val();
         var actNewDate = $(this).parents('#newExamRow').find('.newExamDate').val();
@@ -1458,13 +1560,13 @@ function editSubjTemplateRight(subjId) {
         var actSubjId = $(this).parents('#newExamRow').find('.newExamSubjId').val();
         var actType = 'exam';
 
-        console.log(actNewName+', '+actNewOrder+', '+actNewDate+', '+actNewValue+', '+actNewExamTime+', '+actNewCalif+', '+actSubjId)+', '+actType;
+        (settings.debug)?console.log(actNewName+', '+actNewOrder+', '+actNewDate+', '+actNewValue+', '+actNewExamTime+', '+actNewCalif+', '+actSubjId)+', '+actType:'';
         addNewActivity(actNewName, actNewOrder, actNewDate, actNewValue, actNewExamTime, actNewCalif, actSubjId, actType);
     });
 }
 
 function changeSubjWeek(column,week,done) {
-    console.log('changeSubjWeek('+column+', '+week+', '+done+')');
+    (settings.debug)?console.log('changeSubjWeek('+column+', '+week+', '+done+')'):'';
 
     const updateWeekDone = async () => {
         try {
@@ -1530,7 +1632,7 @@ function changeSubjWeek(column,week,done) {
 }
 
 function addNewWeek(newOrder, newDate, newLesson1, newLesson2, newWatch, newSummary, newExercises, newStudy, subjId) {
-    console.log('addNewWeek('+newOrder+', '+newDate+', '+newLesson1+', '+newLesson2+', '+newWatch+', '+newSummary+', '+newExercises+', '+newStudy+', '+subjId+')');
+    (settings.debug)?console.log('addNewWeek('+newOrder+', '+newDate+', '+newLesson1+', '+newLesson2+', '+newWatch+', '+newSummary+', '+newExercises+', '+newStudy+', '+subjId+')'):'';
 
     if (newOrder!='' && newDate!='' && newLesson1!='') {
         var newDateUnix = new Date(newDate.substring(5,7)+'/'+newDate.substring(8,10)+'/'+newDate.substring(0,4));
@@ -1555,7 +1657,7 @@ function addNewWeek(newOrder, newDate, newLesson1, newLesson2, newWatch, newSumm
                     }
                 ).select();
 
-                //console.log(data);
+                (settings.debug)?console.log(data):'';
 
                 var weeksLength = userWeeks.length;
                 //console.log(data[0].weekId);
@@ -1591,12 +1693,12 @@ function addNewWeek(newOrder, newDate, newLesson1, newLesson2, newWatch, newSumm
 }
 
 function updateWeek(weekId, newOrder, newDate, newLesson1, newLesson2, newWatch, newSummary, newExercises, newStudy, weekSubjId) {
-    console.log('updateWeek('+weekId+', '+newOrder+', '+newDate+', '+newLesson1+', '+newLesson2+', '+newWatch+', '+newSummary+', '+newExercises+', '+newStudy+', '+weekSubjId+')');
+    (settings.debug)?console.log('updateWeek('+weekId+', '+newOrder+', '+newDate+', '+newLesson1+', '+newLesson2+', '+newWatch+', '+newSummary+', '+newExercises+', '+newStudy+', '+weekSubjId+')'):'';
 
     if (newOrder!='' && newDate!='' && newLesson1!='') {
 
         var newDateUnix = new Date(newDate.substring(5,7)+'/'+newDate.substring(8,10)+'/'+newDate.substring(0,4));
-        console.log(newDateUnix);
+        //console.log(newDateUnix);
 
         const updateWeeks = async () => {
             try {
@@ -1649,7 +1751,7 @@ function updateWeek(weekId, newOrder, newDate, newLesson1, newLesson2, newWatch,
 }
 
 function deleteWeek(weekId, subjId) {
-    console.log('deleteWeek');
+    (settings.debug)?console.log('deleteWeek'):'';
 
     const deleteWeek = async () => {
         try {
@@ -1674,7 +1776,7 @@ function deleteWeek(weekId, subjId) {
 }
 
 function updateGeneralSubj(subjGeneralId, subjGeneralCode, subjGeneralName, subjGeneralDegree, subjGeneralYear, subjGeneralCredits, subjGeneralStatus,subjGeneralGradeOrd,subjGeneralGradeExtra,subjGeneralContEval,subjGeneralExamOrd,subjGeneralExamExtra,subjGeneralTestsTaken,subjGeneralTestsTotal,subjGeneralQuarter) {
-    console.log('updateGeneralSubj('+subjGeneralId+', '+subjGeneralCode+', '+subjGeneralName+', '+subjGeneralDegree+', '+subjGeneralYear+', '+subjGeneralCredits+', '+subjGeneralStatus+', '+subjGeneralGradeOrd+', '+subjGeneralGradeExtra+', '+subjGeneralContEval+', '+subjGeneralExamOrd+', '+subjGeneralExamExtra+', '+subjGeneralTestsTaken+', '+subjGeneralTestsTotal+', '+subjGeneralQuarter+')');
+    (settings.debug)?console.log('updateGeneralSubj('+subjGeneralId+', '+subjGeneralCode+', '+subjGeneralName+', '+subjGeneralDegree+', '+subjGeneralYear+', '+subjGeneralCredits+', '+subjGeneralStatus+', '+subjGeneralGradeOrd+', '+subjGeneralGradeExtra+', '+subjGeneralContEval+', '+subjGeneralExamOrd+', '+subjGeneralExamExtra+', '+subjGeneralTestsTaken+', '+subjGeneralTestsTotal+', '+subjGeneralQuarter+')'):'';
 
     if (subjGeneralCode!='' && subjGeneralName!='' && subjGeneralDegree!='') {
 
@@ -1740,13 +1842,13 @@ function updateGeneralSubj(subjGeneralId, subjGeneralCode, subjGeneralName, subj
 }
 
 function updateActivity(actId, newName, newOrder, newDate, newValue, newExamTime, newCalif, actSubjId, newType) {
-    console.log('updateActivity('+actId+', '+newName+', '+newOrder+', '+newDate+', '+newValue+', '+newExamTime+', '+newCalif+', '+actSubjId+', '+newType+')');
+    (settings.debug)?console.log('updateActivity('+actId+', '+newName+', '+newOrder+', '+newDate+', '+newValue+', '+newExamTime+', '+newCalif+', '+actSubjId+', '+newType+')'):'';
 
     if (newOrder!='' && newName!='' && newDate!='') {
 
         var dia = newDate.substring(8,10); var mes = newDate.substring(5,7); var anno = newDate.substring(0,4);
         var nuevaFecha = new Date(anno, mes-1, dia);
-        console.log(nuevaFecha);
+        (settings.debug)?console.log(nuevaFecha):'';
 
         const updateActivities = async () => {
             try {
@@ -1798,7 +1900,7 @@ function updateActivity(actId, newName, newOrder, newDate, newValue, newExamTime
 }
 
 function deleteActivity(actId, subjId) {
-    console.log('deleteActivity');
+    (settings.debug)?console.log('deleteActivity'):'';
 
     const deleteActivity = async () => {
         try {
@@ -1823,11 +1925,11 @@ function deleteActivity(actId, subjId) {
 }
 
 function addNewActivity(actName, actOrder, actDate, actValue, actExamTime, actCalif, subjId, actType) {
-    console.log('addNewActivity('+actName+', '+actOrder+', '+actDate+', '+actValue+', '+actExamTime+', '+actCalif+', '+subjId+', '+actType+')');
+    (settings.debug)?console.log('addNewActivity('+actName+', '+actOrder+', '+actDate+', '+actValue+', '+actExamTime+', '+actCalif+', '+subjId+', '+actType+')'):'';
 
     if (actName!='' && actOrder!='' && actValue!='' && actCalif!='' && subjId!='') {
         var newDateUnix = new Date(actDate.substring(5,7)+'/'+actDate.substring(8,10)+'/'+actDate.substring(0,4));
-        console.log(newDateUnix);
+        //console.log(newDateUnix);
 
         const insertNewActivity = async () => {
             try {
@@ -1846,10 +1948,10 @@ function addNewActivity(actName, actOrder, actDate, actValue, actExamTime, actCa
                     }
                 ).select();
 
-                console.log(data);
+                (settings.debug)?console.log(data):'';
 
                 var actLength = userActivities.length;
-                console.log(data[0].actId);
+                (settings.debug)?console.log(data[0].actId):'';
 
                 userActivities[actLength] = {
                     'actId': data[0].actId,
@@ -1880,8 +1982,9 @@ function addNewActivity(actName, actOrder, actDate, actValue, actExamTime, actCa
 }
 
 function errorReporting(type, msg) {
-	console.log('f:{errorReporting('+msg+')}');
+	(settings.debug)?console.log('f:{errorReporting('+msg+')}'):'';
 
+    console.log(msg);
     if (type == 'warning') {
         var typeClass = ' errorItemWarning';
     } else if (type == 'success') {
@@ -1909,7 +2012,7 @@ function errorReporting(type, msg) {
 /* -------- utils -------- */
 
 function getRandomCode(length) {
-	(userData.debug)?console.log('f:{getRandomCode}'):'';
+	(settings.debug)?console.log('f:{getRandomCode}'):'';
 
 	var code = '';
 	for (i=0;i<length;i++) {
@@ -1975,4 +2078,12 @@ function timeDifference(timestampUnix) {
   } else {
     return diferenciaMin + " minutos";
   }
+}
+
+function parseCalif(calif) {
+    num = calif.replace('.',',');
+    response = parseFloat(calif);
+    //console.log(response);
+
+    return response;
 }

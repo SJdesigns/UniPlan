@@ -1,0 +1,5 @@
+# Ignorar toda la carpeta planificacion (y su contenido)
+ /planificacion/
+```// filepath: .gitignore
+# Ignorar toda la carpeta planificacion (y su contenido)
+ /planificacion/
