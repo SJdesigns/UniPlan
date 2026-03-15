@@ -103,6 +103,10 @@ var UniTimer = (function() {
             log('Element #timerTabLeft not found');
             return;
         }
+        
+        // Limpiar contenido anterior
+        left.empty();
+        
         var htmlLeft = '';
         htmlLeft += '<div class="timerContainer">';
         htmlLeft += '<div class="timerModeLabel" id="timerModeLabel">Modo: Estudio</div>';
@@ -131,6 +135,10 @@ var UniTimer = (function() {
             log('Element #timerTabRight not found');
             return;
         }
+        
+        // Limpiar contenido anterior
+        right.empty();
+        
         var settings = loadSettings();
         var htmlRight = '<p>Configuracion:</p><br />';
         htmlRight += '<div id="timerTabSettings">';
@@ -443,9 +451,6 @@ function showTimerTab() {
         $('#timerTabLeft').css('min-height',(window.innerHeight-80)-60);
     }
 }
-
-// auto-init when DOM ready in case the tab is shown later
-$(function(){ if ($('#timerTabLeft').length) UniTimer.init(); });
 
 function setupKeyboardControls() {
     (settings.debug)?console.log('setupKeyboardControls'):'';

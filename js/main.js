@@ -1,4 +1,4 @@
-// UniPlan v1.3
+// UniPlan v1.4
 
 if (localStorage.getItem('uniplan-user') === null) {
 	window.location = './login.html';
@@ -33,8 +33,8 @@ if (!localStorage.getItem('uniplan-lastRequestedData')) {
 var userId = userData.userId;
 
 var appName = 'UniPlan';
-var version = '1.3.0';
-var deployment = '30/11/2025';
+var version = '1.4.0';
+var deployment = '15/03/2026';
 var author = '@sjdesigns';
 
 var userSubjects = {};
@@ -43,6 +43,32 @@ var userActivities = {};
 var firstLoadDegreeProgress = true; // para evitar que se haga la animacion del progreso de creditos cada vez que se carga la home
 var offline = false;
 var setConnectionStatus = false;
+
+function cleanupEventListeners() {
+    (settings.debug)?console.log('cleanupEventListeners'):'';    
+    // Remover listeners dinámicos del home
+    $('.homeSubjRow').off('click');
+    $('.homeYearSubjDropdownUp').off('click');
+    $('.homeYearSubjDropdownDown').off('click');
+    // NOTA: .navItemSubject NO se remueve aquí porque es un elemento global del nav que debe persistir
+    // Remover listeners del subject
+    $('.tabHeaderEdit').off('click');
+    $('.planningWeekWatch').off('click');
+    $('.planningWeekSummary').off('click');
+    $('.planningWeekExercises').off('click');
+    $('.planningWeekStudy').off('click');
+    $('.tabHeaderGoBack').off('click');
+    $('.subjEditSave').off('click');
+    $('.subjEditUpdate').off('click');
+    $('.subjEditDelete').off('click');
+    $('.subjGeneralUpdate').off('click');
+    $('.subjActEditSave').off('click');
+    $('.subjActEditUpdate').off('click');
+    $('.subjActEditDelete').off('click');
+    $('.subjExamUpdate').off('click');
+    $('.subjExamDelete').off('click');
+    $('.subjExamSave').off('click');
+}
 
 $(function() {
     loadData();
@@ -104,7 +130,7 @@ function getUserSubjects() {
 	        }
 
 	    } catch (error) {
-	        console.log(error);
+	        (userData.debug)?console.log(error):'';
 
             offline = true;
             userSubjects = lastRequestedData['subjects'];
@@ -136,7 +162,7 @@ function getUserWeeks() {
                 if (!setConnectionStatus) { connectionStatus(); }
             }
         } catch (error) {
-            console.log(error);
+            (userData.debug)?console.log(error):'';
 
             offline = true;
             userWeeks = lastRequestedData['weeks'];
@@ -165,7 +191,7 @@ function getUserActivities() {
                 if (!setConnectionStatus) { connectionStatus(); }
             }
         } catch (error) {
-            console.log(error);
+            (userData.debug)?console.log(error):'';
 
             offline = true;
             userActivities = lastRequestedData['activities'];
@@ -210,7 +236,7 @@ function showTab(tabName,subject) {
 
 function showHomeTab() {
     (settings.debug)?console.log('showHomeTab'):'';
-
+    cleanupEventListeners();
     $('#tabHome').show();
     $('.navItemMobile').removeClass('navItemMobileActive');
     $('#navItemHomeMobile').addClass('navItemMobileActive');
@@ -425,8 +451,10 @@ function showHomeTab() {
     $('.homeYearSubjDropdownUp').on('click',function() {
         var year = $(this).attr('id').substring(22);
 
-        $('#homeSubjYear'+year).css('height', '36px');
+        //$('#homeSubjYear'+year).css('height', '36px');
         $('#homeSubjYear'+year).css('border-radius', '10px');
+        $('#homeSubjYear'+year+' .homeSubjRow:not(.homeSubjRowTitle)').hide();
+
         $('#homeYearSubjDropdownUp'+year).hide();
         $('#homeYearSubjDropdownDown'+year).css('display','flex');
     });
@@ -434,8 +462,9 @@ function showHomeTab() {
     $('.homeYearSubjDropdownDown').on('click',function() {
         var year = $(this).attr('id').substring(24);
 
-        $('#homeSubjYear'+year).css('height', 'auto');
+        //$('#homeSubjYear'+year).css('height', 'auto');
         $('#homeSubjYear'+year).css('border-radius', '10px 10px 0px 0px');
+        $('#homeSubjYear'+year+' .homeSubjRow:not(.homeSubjRowTitle)').css('display','flex');
         $('#homeYearSubjDropdownUp'+year).css('display','flex');
         $('#homeYearSubjDropdownDown'+year).hide();
     });
@@ -444,14 +473,11 @@ function showHomeTab() {
         var subjId = $(this).attr('id').substring(8);
         showTab('subject',subjId);
     });
-
-    $('#navItemHome').on('click',function() { showTab('home',false); });
-    $('#navItemHomeMobile').on('click',function() { showTab('home',false); });
 }
 
 function showCalendarTab() {
     (settings.debug)?console.log('showCalendarTab'):'';
-
+    cleanupEventListeners();
     $('#tabCalendar').show();
     $('.navItemMobile').removeClass('navItemMobileActive');
     $('#navItemCalendarMobile').addClass('navItemMobileActive');
@@ -461,8 +487,9 @@ function showCalendarTab() {
 
     for (i in userActivities) {
         var ahora = new Date();
+        ahora.setHours(0,0,0,0);
 
-        if (ahora < userActivities[i].actDate) {
+        if (ahora <= userActivities[i].actDate) {
 
             var diferenciaSegundos = Math.abs(userActivities[i].actDate - ahora.getTime());
             var diferenciaDias = Math.ceil(diferenciaSegundos / (1000 * 60 * 60 * 24));
@@ -507,6 +534,7 @@ function showCalendarTab() {
 
     for (i in calListIds) {
         for (j in calListObject) {
+            
             if (calListObject[j].actTimestamp == calListIds[i]) {
                 var fecha = new Date(parseInt(calListObject[j].actTimestamp));
                 
@@ -523,11 +551,12 @@ function showCalendarTab() {
 
                 htmlCalendarList += '<div class="calItem" id="calItem-'+calListObject[j].actId+'">';
                     htmlCalendarList += '<div class="calItemCell calDateCell"><p>'+calListObject[j].actDate+'</p></div>';
+
                     if (calListObject[j].actRelTime < 7) {
-                        if (calListObject[j].actRelTime == 1) {
-                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeInminent"><p>entrega hoy</p></div>';
-                        } else if (calListObject[j].actRelTime == 2) {
-                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeInminent"><p>entrega mañana</p></div>';
+                        if (calListObject[j].actRelTime == 0) {
+                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeInminent"><p>hoy</p></div>';
+                        } else if (calListObject[j].actRelTime == 1) {
+                            htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeInminent"><p>mañana</p></div>';
                         } else {
                             htmlCalendarList += '<div class="calItemCell calRelTimeCell calRelTimeThisWeek"><p>faltan '+calListObject[j].actRelTime+' días</p></div>';
                         }
@@ -704,7 +733,7 @@ function loadCalendarTables() {
 
 function showSubjectTab(subjId) {
     (settings.debug)?console.log('showSubjectTab('+subjId+')'):'';
-
+    cleanupEventListeners();
     $('#tabSubj-'+subjId).show();
     subjectHeaderTemplate(subjId);
 
@@ -885,7 +914,7 @@ function subjectTemplate(subjId) {
                                     console.log(dateDiff < 0);
                                     console.log(dateDiff < 7);
                                     console.log(dateDiff < 14);*/
-                                    if (dateDiff < 0) { // fecha pasada
+                                    if (dateDiff < 1) { // fecha pasada
                                         htmlActList += '<div class="planningCell planningWeekDate pendingTimePassed"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
                                     } else if (dateDiff < 7) { // en menos de una semana
                                         htmlActList += '<div class="planningCell planningWeekDate pendingTimeThisWeek"><p>'+twoDigits(fecha.getDate())+'-'+twoDigits(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'</p></div>';
@@ -984,8 +1013,12 @@ function subjectTemplate(subjId) {
                             }
 
                             var valueCalif = (actCalif * actValue) / 10;
-                            //console.log(valueCalif);
+                            console.log(userActivities[act].actName);
+                            console.log(actValue);
+                            console.log(actCalif);
+                            console.log(valueCalif);
                             activitiesCalif = activitiesCalif + valueCalif;
+                            console.log(activitiesCalif);
                         }
                     }
                     for (s in userSubjects) {
@@ -1008,18 +1041,18 @@ function subjectTemplate(subjId) {
                     var extraValue = 0;
                     for (ex in userActivities) {
                         if (userActivities[ex].actSubject == subjId && userActivities[ex].actType == 'exam') {
-                            if (userActivities[ex].actName == 'Ordinaria') {
+                            if (userActivities[ex].actName == 'ordinaria' || userActivities[ex].actName == 'Ordinaria') {
                                 var ordinaryCalif = parseFloat(userActivities[ex].actCalif);
                                 ordinaryValue = ((ordinaryCalif * 6) / 10) + contEvaluation;
                                 ordinaryValue = Math.round(ordinaryValue * 100) / 100;
-                                console.log(ordinaryCalif);
-                                console.log(ordinaryValue);
+                                //console.log(ordinaryCalif);
+                                //console.log(ordinaryValue);
                             } else {
                                 var extraCalif = parseFloat(userActivities[ex].actCalif);
                                 extraValue = ((extraCalif * 6) / 10) + contEvaluation;
                                 extraValue = Math.round(extraValue * 100) / 100;
-                                console.log(extraCalif);
-                                console.log(extraValue);
+                                //console.log(extraCalif);
+                                //console.log(extraValue);
                             }
                         }
                     }
@@ -1098,7 +1131,7 @@ function subjectTemplate(subjId) {
 
 function editSubj(subjId) {
     (settings.debug)?console.log('editSubj('+subjId+')'):'';
-
+    cleanupEventListeners();
     showTab('subjEdit',false);
     subjectHeaderTemplate(subjId,'edit');
 
@@ -1367,7 +1400,7 @@ function editSubjTemplateRight(subjId) {
                     htmlActList += '<div class="planningCell planningWeekOrderMin"><input class="subjEditInput activityOrderInput" type="number" value="'+act.actOrder+'" /></div>';
                     htmlActList += '<div class="planningCell planningWeekDateMin"><input class="subjEditInput activityDateInput" id="actDate-'+act.actId+'" type="date" value="'+fecha.getFullYear()+'-'+twoDigits(fecha.getMonth()+1)+'-'+twoDigits(fecha.getDate())+'" /></div>';
                     htmlActList += '<div class="planningCell planningWeekValueMin"><input class="subjEditInput activityValueInput" type="text" value="'+act.actValue+'" /></div>';
-                    htmlActList += '<div class="planningCell planningWeekCalificationMin"><input class="subjEditInput activityGradeInput" type="text" value="'+act.actCalif+'" /></div>';
+                    htmlActList += '<div class="planningCell planningWeekCalificationMin"><input class="subjEditInput activityGradeInput inputNoComma" type="text" value="'+act.actCalif+'" /></div>';
                     htmlActList += '<div class="planningCell planningWeekEditOpt">';
                         htmlActList += '<svg class="subjEditBtn subjActEditUpdate" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg>';
                         htmlActList += '<svg class="subjEditBtn subjActEditDelete" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
@@ -1484,6 +1517,12 @@ function editSubjTemplateRight(subjId) {
 
 
     $('.subjectDataRight').html(htmlEditActivities);
+
+    document.querySelectorAll(".inputNoComma").forEach(input => {
+        input.addEventListener("input", function () {
+            this.value = this.value.replace(/,/g, ".");
+        });
+    });
 
     $('.subjActEditSave').on('click',function() {
         (settings.debug)?console.log('Añadir nueva actividad'):'';
